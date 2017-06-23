@@ -1,0 +1,55 @@
+.login-container {
+    /*background-color: gray;*/
+    margin: 0 auto;
+    width: 350px;
+    font-size: 13px;
+    padding: 70px;
+    /*text-align: center;*/
+    /*display: inline-block;*/
+}
+
+.agree-div {
+    margin-top: 20px;
+}
+
+.agree-div label {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.agree-check {
+    margin: 5px;
+    vertical-align: middle;
+}
+
+.agree-main {
+    width: 90%;
+    display: inline-block;
+    background-color: #e9ecef;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+}
+
+.agree-main span {
+    font-size: 1rem;
+    margin-left: 5px; 
+}
+
+.agree-main-content {
+    display: none;
+}
+
+[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    border: 2px solid #faa2c1;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+[type="checkbox"]:checked {
+    background-color: #96f2d7;
+    border: 2px solid #38d9a9;
+}
