@@ -43,8 +43,12 @@ header {
     text-align: center;
 }
 
+.slide-panel table {
+    table-layout: fixed;
+}
+
 .slide-image {
-    width: 32%;
+    width: 100%;
     height: auto;
 }
 
