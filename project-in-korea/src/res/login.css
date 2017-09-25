@@ -1,24 +1,79 @@
-@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+/*@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
 * {
     font-family: 'Jeju Gothic', serif;
+}*/
+@font-face {
+    font-family: 'cute';
+    src: local('cute'), url(./cute.ttf) format('tty');
+}
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+
+* {
+    font-family: 'cute', 'Jeju Gothic', serif;
 }
 
 body {
-    background-color: #f9f9f9;
+    background-color: #efefef;
 }
 
 .login-container {
     /*background-color: gray;*/
     margin: 0 auto;
-    width: 350px;
-    font-size: 13px;
-    padding: 70px;
+    width: 260px !important;
     /*text-align: center;*/
     /*display: inline-block;*/
 }
 
+.login-text-input {
+    width: 100%;
+    border: 2px solid black;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    height: 36px;
+    display: inline-block;
+    padding: 5px;
+}
+
 .login-icon-container {
     margin-bottom: 20px;
+}
+
+.login-button {
+    width: 100%;
+    background-color: black;
+    color: white;
+    height: 36px;
+    margin-top: 55px;
+    margin-bottom: 5px;
+}
+
+.login-menu-container {
+    border-top: 2px solid black;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.login-menu-container ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 5px;
+    font-size: 1rem;
+}
+
+.sns-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.sns-container ul li {
+    list-style: none;
+    display: inline-block;
+    /*margin: 10px;*/
+    width: 25%;
+}
+
+.sns-container ul li a img {
+    /*height: 40px;*/
 }
 
 .social-icon {
@@ -94,4 +149,8 @@ body {
 
 .login-menus li a {
     text-decoration: none;
+}
+
+.facebook-login-icon {
+
 }
