@@ -29,7 +29,7 @@ class CategorySelector extends Component {
     render() {
         return (
             <div>
-                <Dropdown options={options} onChange={this._onSelect} placeholder="분야를 선택하세요." />
+                <Dropdown options={options} onChange={this.props.onChange} value={this.props.value} placeholder="분야를 선택하세요." />
             </div>
         );
     }
