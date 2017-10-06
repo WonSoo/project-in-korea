@@ -30,10 +30,10 @@ class WritePost extends Component {
         this.state = {
             payType: true,
             howMuchPay: 0,
-            memberList: [(<AddMemberInput job="" howMany={1} onJobChange={(job) => {
-                this.jobList[0].job = job;
-            }} onHowManyChange={(howMany) => {
-                this.jobList[0].howMany = howMany;
+            memberList: [(<AddMemberInput renderRemoveButton={false} job="" howMany={1} onJobChange={(event) => {
+                this.jobList[0].name = event.target.value;
+            }} onHowManyChange={(event) => {
+                this.jobList[0].howMany = event.target.value;
             }} />)],
             content: '',
             editorState: EditorState.createEmpty(),
@@ -45,10 +45,7 @@ class WritePost extends Component {
         this.category;
         this.offlineOrOnline;
         this.pay;
-        this.jobList = [{
-            job: '',
-            howMany: 1
-        }];
+        this.jobList = [{}];
 
         this.payChange = this.payChange.bind(this);
         this.addMember = this.addMember.bind(this);
@@ -91,25 +88,35 @@ class WritePost extends Component {
     }
 
     addMember() {
-
-        this.jobList[this.jobList.length - 1] = {};
+        this.jobList[this.jobList.length] = {};
+        const that = this;
         const onJobChange = (function () {
-            const index = this.state.memberList.length - 1;
-            const that = this;
-            return (job) => {
-                this.jobList[index].name = job;
+            console.log(that)
+            const index = that.state.memberList.length;
+            return (event) => {
+                that.jobList[index].name = event.target.value;
             }
-        });
+        })();
 
         const onHowManyChange = (function () {
-            const index = this.state.memberList.length - 1;
-            const that = this;
-            return (howMany) => {
-                this.jobList[index].howMany = howMany;
+            const index = that.state.memberList.length;
+            return (event) => {
+                that.jobList[index].howMany = event.target.value;
             }
-        });
+        })();
+
+        const onRemoveForm = (function () {
+            const index = that.state.memberList.length;
+            return (event) => {
+                that.jobList[index] = null;
+                let tempMemberList = that.state.memberList.slice() 
+                tempMemberList[index] = null;
+                that.setState({ memberList: tempMemberList })
+            }
+        })();
+        
         this.setState({
-            memberList: [...this.state.memberList, (<AddMemberInput onJobChange={onJobChange} onHowManyChange={onHowManyChange} />)]
+            memberList: [...this.state.memberList, (<AddMemberInput renderRemoveButton={true} onJobChange={onJobChange} onHowManyChange={onHowManyChange} onRemoveForm={onRemoveForm} />)]
         })
     }
 
@@ -162,7 +169,11 @@ class WritePost extends Component {
             project_duration: this.state.month,
             recruit_start: nowDate.getTime(),
             recruit_end: recruitEndDate.getTime(),
-            jobgroup: this.jobList,
+            jobgroup: this.jobList.filter((item) => {
+                if(item) {
+                    return true;
+                }
+            }),
             content: this.state.editorState, // html로 들어가야함. 이미는 text.
             files: {
                 0: null
@@ -213,17 +224,17 @@ class WritePost extends Component {
                             <div className="input-group contact-input-group">
                                 <div className="name-input">
                                     <label htmlFor="name">이름:</label>
-                                    <input type="text" id="name" name="name" onChange={this.handleInputChange} required/>
+                                    <input type="text" id="name" name="name" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="contact-input">
                                     <label htmlFor="contact">연락망:</label>
-                                    <input type="text" id="contact" name="contact" onChange={this.handleInputChange} required/>
+                                    <input type="text" id="contact" name="contact" onChange={this.handleInputChange} required />
                                 </div>
                             </div>
                             <div className="input-group project-summary-input-group">
                                 <div className="project-name-input">
                                     <label htmlFor="project_name">프로젝트명:</label>
-                                    <input type="text" id="project_name" name="project_name" onChange={this.handleInputChange} required/>
+                                    <input type="text" id="project_name" name="project_name" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="project-perpose-input">
                                     <label htmlFor="project-perpose">프로젝트 목적:</label>
@@ -234,7 +245,7 @@ class WritePost extends Component {
                                 <div className="project-tag-input">
                                     <label htmlFor="name">컬러 태그:</label>
                                     <ColorTagSelector onChange={this.handleColorTagChange} />
-                                    <CategorySelector onChange={this.handleCategoryChange} value={this.category}/>
+                                    <CategorySelector onChange={this.handleCategoryChange} value={this.category} />
                                 </div>
                             </div>
                             <div className="input-group work-type">
@@ -259,15 +270,15 @@ class WritePost extends Component {
                                             없다
                                     </RadioButton>
                                     </RadioGroup>
-                                    {this.state.payType ? (<input type="text" name="howMuchPay" id="howMuchPay" onChange={this.handleInputChange} value={this.howMuchPay} required/>) : (<input type="text" name="howMuchPay" id="howMuchPay" disabled />)}
+                                    {this.state.payType ? (<input type="text" name="howMuchPay" id="howMuchPay" onChange={this.handleInputChange} value={this.howMuchPay} required />) : (<input type="text" name="howMuchPay" id="howMuchPay" disabled />)}
                                 </div>
                                 <div className="project-day-type">
                                     <span>프로젝트 기간:</span>
-                                    <input type="number" name="month" min="1" step="1" onChange={this.handleInputChange} required/>
+                                    <input type="number" name="month" min="1" step="1" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="project-dday-type">
                                     <span>모집 기간:</span>
-                                    <input type="date" name="dday" onChange={this.handleInputChange} required/>
+                                    <input type="date" name="dday" onChange={this.handleInputChange} required />
                                 </div>
                             </div>
                             <div className="input-group project-member">
@@ -290,7 +301,7 @@ class WritePost extends Component {
                             }}
                         />
                         {/*<CKEditor activeClass="p10" config={ckConfig} content={this.state.content} onChange={this.updateContent} />*/}
-                            <button onClick={this.sendPost}>전송</button>
+                        <button onClick={this.sendPost}>전송</button>
                     </div>
                     {/*<img src={testImg} />*/}
                 </div>
