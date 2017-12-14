@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../res/App.css';
-import SearchBtnImg from '../../res/images/btns/bt_search.png'
+import SearchBtnImg from '../../res/images/btns/ic_view_picture.png'
 
 
 class ViewModeBtn extends Component {

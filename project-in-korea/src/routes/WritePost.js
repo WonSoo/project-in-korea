@@ -15,7 +15,9 @@ import CKEditor from "react-ckeditor-component";
 import testImg from '../res/images/test.png'
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw, } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import axios from 'axios';
 
 
 
@@ -57,6 +59,25 @@ class WritePost extends Component {
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.offlineChange = this.offlineChange.bind(this);
         this.sendPost = this.sendPost.bind(this);
+        this.successWriteCallback = this.successWriteCallback.bind(this);
+    }
+
+    successWriteCallback(res) {
+        console.log(res);
+        axios.post('http://real-home.iptime.org:3000/request/login', {
+            request: 'login',
+            type: 'facebook',
+            accessToken: res.accessToken
+        })
+            .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                    this.setState({ fireRedirect: true });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     onEditorStateChange(editorState) {
@@ -109,12 +130,12 @@ class WritePost extends Component {
             const index = that.state.memberList.length;
             return (event) => {
                 that.jobList[index] = null;
-                let tempMemberList = that.state.memberList.slice() 
+                let tempMemberList = that.state.memberList.slice()
                 tempMemberList[index] = null;
                 that.setState({ memberList: tempMemberList })
             }
         })();
-        
+
         this.setState({
             memberList: [...this.state.memberList, (<AddMemberInput renderRemoveButton={true} onJobChange={onJobChange} onHowManyChange={onHowManyChange} onRemoveForm={onRemoveForm} />)]
         })
@@ -154,14 +175,15 @@ class WritePost extends Component {
             contact: this.state.contact,
             project_name: this.state.project_name,
             project_purpose: this.state.project_purpose,
-            colortags: {
-                activity: this.colorTagList.filter(function (x) { return x == '#cf010d' }).length,
-                technical: this.colorTagList.filter(function (x) { return x == '#027ad1' }).length,
-                academic: this.colorTagList.filter(function (x) { return x == '#f19914' }).length,
-                public_interest: this.colorTagList.filter(function (x) { return x == '#048e1e' }).length,
-                artistic: this.colorTagList.filter(function (x) { return x == '#fdf21e' }).length,
-                modern: this.colorTagList.filter(function (x) { return x == '#7a006b' }).length,
-            },
+            // colortags: {
+            //     activity: this.colorTagList.filter(function (x) { return x == '#cf010d' }).length,
+            //     technical: this.co   lorTagList.filter(function (x) { return x == '#027ad1' }).length,
+            //     academic: this.colorTagList.filter(function (x) { return x == '#f19914' }).length,
+            //     public_interest: this.colorTagList.filter(function (x) { return x == '#048e1e' }).length,
+            //     artistic: this.colorTagList.filter(function (x) { return x == '#fdf21e' }).length,
+            //     modern: this.colorTagList.filter(function (x) { return x == '#7a006b' }).length,
+            // },
+            colortags: this.colorTagList,
             big_category: this.category, // 카테고리의 각 코드가 있음. 카테고리는 좀더 상의필요.
             work_type: this.state.offlineOrOnline, // or 'online'
             pay: this.state.payType,
@@ -170,15 +192,26 @@ class WritePost extends Component {
             recruit_start: nowDate.getTime(),
             recruit_end: recruitEndDate.getTime(),
             jobgroup: this.jobList.filter((item) => {
-                if(item) {
+                if (item) {
                     return true;
                 }
             }),
-            content: this.state.editorState, // html로 들어가야함. 이미는 text.
+            content: draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())),// html로 들어가야함. 이미는 text.
             files: {
                 0: null
             }
         }
+
+        axios.post('http://real-home.iptime.org:3000/request/post', data)
+            .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                    this.successWriteCallback();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
         console.log(data);
     }

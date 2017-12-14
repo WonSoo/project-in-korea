@@ -6,6 +6,7 @@ import Login from '../routes/Login';
 import Register from '../routes/Register';
 import RegisterProcess from '../routes/RegisterProcess';
 import WritePost from '../routes/WritePost';
+import ViewPost from '../routes/ViewPost';
 
 // import RegisterProcess from '../router/RegisterProcess';
 
@@ -19,6 +20,8 @@ class App extends Component {
           <Route exact path="/Register" component={Register}></Route>
           <Route exact path="/RegisterProcess" component={RegisterProcess}></Route>
           <Route exact path="/WritePost" component={WritePost}></Route>
+          <Route exact path="/ViewPost" component={ViewPost}></Route>
+          <Route path="/post/:id" component={ViewPost} />
         </div>
       </Router>
     );

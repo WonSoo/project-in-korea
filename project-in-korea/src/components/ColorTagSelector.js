@@ -44,7 +44,7 @@ class ColorTagSelector extends Component {
             <li key={"" + color + index}><ColorTag color={color} index={index} onClick={this.removeColor} /></li>
         );
         return (
-            <div>
+            <div className={this.props.className}>
                 <table className="color-tag-table">
                     <tr>
                         <td style={{ backgroundColor: "#cf010d" }} onClick={() => this.addColor("#cf010d")}>활동적인</td>

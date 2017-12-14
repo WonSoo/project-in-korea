@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.16.2",
+    "color-mixer": "^1.0.0",
     "draft-js": "^0.10.3",
+    "draftjs-to-html": "^0.7.5",
     "react": "^15.6.1",
     "react-ckeditor-component": "^1.0.4",
     "react-dom": "^15.6.1",
@@ -13,6 +16,7 @@
     "react-radio-buttons": "^1.1.1",
     "react-router-dom": "^4.1.1",
     "react-slick": "^0.14.11",
+    "ryb-color-mixer": "^0.6.1",
     "slick-carousel": "^1.6.0"
   },
   "devDependencies": {

@@ -11,14 +11,14 @@
 }
 
 body {
-    background-color: #efefef;
+    background-color: white !important; 
 }
 
 header .main-title {
     display: block;
     /*width: 50%;*/
-    margin: 100px auto;
-    /*height: 200px;*/
+    margin: 20px auto 50px auto;
+    height: 80px;
 }
 
 .icon {
@@ -41,7 +41,7 @@ header .main-title {
     /*text-decoration: none;
     background-color: #ffbd03;
     color: black;*/
-    padding: 5px;
+    padding: 2.5px;
 }
 
 .slider-container {
@@ -74,6 +74,7 @@ header {
     width: calc(100% - 10px);
     height: auto;
     margin: 0 auto;
+    border: solid 1px #ebebeb;
 }
 
 .slick-dots {
@@ -148,6 +149,17 @@ header {
 
 }
 
+.fire {
+    background-image: url("fire.gif") !important;
+    background-size: contain;
+    /* display: inline-block; */
+}
+
+.interested {
+    background-color: rgb(68, 68, 68) !important;
+    color: white !important;
+}
+
 .article-table th {
     border-bottom: 2px solid black;
     margin: 2.5px;
@@ -161,12 +173,12 @@ header {
     font-weight: 900;
 }
 
-.article-table th:nth-child(5) {
+/* .article-table th:nth-child(5) {
     font-size: 1em;
-}
+} */
 
 .article-table td {
-    background-color: #eaeaea;
+    background-color: #f6f6f6;
     text-align: center;
     width: 76px;
 }
@@ -225,10 +237,31 @@ header {
 
 .search-item {
     float: left;
+    margin-right: 5px; 
+}
+
+.search-item button {
+    padding: 0;
+}
+
+.search-input {
+    width: 673px;
+    font-family: sans-serif;
+    padding-left: 8px; 
+    border: solid 2px black;
+}
+
+.search-input:focus {
+    outline: none;
 }
 
 .search-bar ul li {
     list-style: none;
+}
+
+.search-bar ul li img {
+    margin: 0;
+    padding: 0;
 }
 
 .search-bar * {
@@ -242,13 +275,14 @@ header {
 
 .color-tag-table {
     border-collapse: collapse;
-    width: 248px;
+    /* width: 248px; */
     height: 90px;
     box-sizing: border-box;
 }
 
 .color-tag-table tr {
     width: 121px;
+    height: 28px !important;    
     max-height: 28px;
     text-align: center;
     font-weight: 900;
@@ -257,7 +291,10 @@ header {
 }
 
 .color-tag-table tr td {
+    height: 28px !important;
     max-height: 28px;
+    width: 122px;
+    max-width: 122px;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -265,20 +302,29 @@ header {
 
 .color-tag-table, .color-tag-table td, .color-tag-table th {
     border: 1px solid black;
-        box-sizing: border-box;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    box-sizing: border-box;
 
 }
 
 .color-tag-table {
     border: 2px solid black;
-        box-sizing: border-box;
-
+    box-sizing: border-box;
+    width: 246px;
 }
 
 .color-tag-table tr td:nth-child(1) {
-    border-right: 2px solid black;
-        box-sizing: border-box;
+    width: 124px;
+    min-width: 124px;
+}
 
+.color-tag-table tr:nth-child(3) td {
+    border-bottom: 2px solid black;
+}
+
+.color-tag-table tr:nth-child(1) td {
+    border-top: none;
 }
 
 .clean-list {
@@ -286,13 +332,14 @@ header {
 }
 
 .color-tag-selected {
-    width: 248px;
-    height: 28px;
-    padding: 1px;
+    width: 246px;
+    height: 26px;
+    /* padding: 1px; */
     box-sizing: border-box;
     border: 2px solid black;
     background-color: #f2f2f2;
     border-top: none;
+    /* text-align: center; */
 }
 
 .color-tag-selected li {
@@ -300,7 +347,37 @@ header {
     display: inline-block;
     width: 38px;
     height: 22px;
-    margin: 1px;
+    margin: 2px 1px;
+}
+
+.expend-search-area .color-tag-table {
+    border: none;
+    border-left: 2px solid black;
+    box-sizing: border-box;
+}
+
+/* .expend-search-area .color-tag-table tr td {
+    width: 27px;
+    max-width: 27px;
+} */
+
+.expend-search-area .color-tag-table tr td:nth-child(2){
+    border-right: none;
+}
+
+.expend-search-area .color-tag-selected {
+    border: none;
+    border-left: 2px solid black;
+    border-bottom: 0.5px solid black;    
+    box-sizing: border-box;
+}
+
+.expend-search-area .color-tag-selected li:first-child {
+    margin-left: 3px;
+}
+
+.expend-search-area .color-tag-selected li:last-child {
+    margin-right: 3px;
 }
 
 .form {
@@ -316,8 +393,8 @@ header {
 
 .header-wrap {
     padding: 0 calc((100% - 980px)/2);
-    background-color: #f9f9f9;
-    border-bottom: 1px solid #cccccc;
+    background-color: white;
+    /* border-bottom: 1px solid #cccccc; */
 
 }
 
@@ -348,11 +425,6 @@ input {
 .input-group div {
     margin: 2.5px;
 }
-
-
-
-
-
 
 .Dropdown-root {
   position: relative;
@@ -447,3 +519,74 @@ input {
   display: block;
   padding: 8px 10px;
 }
+
+.ViewPost-table {
+    border-collapse: collapse;
+    width: 800px;
+    margin: 0 auto;
+}
+
+.ViewPost-name {
+    text-align: center;
+}
+
+.ViewPost-table th {
+    width: 20%;
+}
+
+.ViewPost-table tr {
+    height: 36px;
+}
+
+.ViewPost-table {
+    border: 2px solid black;
+}
+
+.ViewPost-table th, .ViewPost-table td {
+    border: 2px solid black;
+}
+
+.ViewPost-article article {
+    margin: 0 20px;
+}
+
+.expend-search-area {
+    height: 119px;
+    width: 970px;
+    margin: 0 auto;
+    border: solid black 2px;
+    box-sizing: border-box;
+}
+
+.search-color-tag {
+    float: right;
+}
+
+.catogory-selector {
+    float: left;
+    width: 720px;
+}
+
+.catogory-selector table {
+    border-spacing: 0;    
+}
+
+.catogory-selector span {
+    display: inline-block;
+    width: 90px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    line-height: 32px;
+    font-weight: 900;
+}
+
+.article-table tr td:first-child {
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    font-size: 16pt;
+    letter-spacing: 0;
+    width: 86px;
+    letter-spacing: -2px;
+}
+

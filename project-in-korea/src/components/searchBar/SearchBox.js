@@ -5,8 +5,8 @@ import '../../res/App.css';
 class SearchBox extends Component {
     render() {
         return (
-            <div className="search-item">
-                <input type="text"/>
+            <div>
+                <input type="text" className="search-input" onChange={this.props.handleSearchTextChange}/>
             </div>
         );
     }

@@ -13,9 +13,37 @@ import facebookImg from '../res/images/sns/ic_facebook.png';
 import googleImg from '../res/images/sns/ic_google.png';
 import naverImg from '../res/images/sns/ic_naver.png';
 import twitterImg from '../res/images/sns/ic_twitter.png';
+import axios from 'axios';
+import { Redirect } from 'react-router'
 
 
 class Login extends Component {
+    constructor() {
+        super();
+        this.state = {
+            fireRedirect: false
+        }
+        this.successLoginCallback = this.successLoginCallback.bind(this);
+    }
+
+    successLoginCallback(res) {
+        console.log(res);
+        axios.post('http://real-home.iptime.org:3000/request/login', {
+            request: 'login',
+            type: 'facebook',
+            accessToken: res.accessToken
+        })
+            .then((response) => {
+                console.log(response);
+                if (response.status == 200) {
+                    this.setState({ fireRedirect: true });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     render() {
         return (
             <div className="root-container">
@@ -38,10 +66,7 @@ class Login extends Component {
                                 autoLoad={false}
                                 fields="name,email,picture"
                                 onClick={""}
-                                callback={(res) => {
-                                    console.log(res);
-                                    console.log(JSON.parse(res))
-                                }}
+                                callback={this.successLoginCallback}
                                 cssClass="clean-button"
                                 textButton=""
                                 icon={<a><img src={facebookImg} /></a>} /></li>
@@ -51,6 +76,9 @@ class Login extends Component {
                         </ul>
                     </div>
                 </div>
+                {this.state.fireRedirect && (
+                    <Redirect to={'/'} />
+                )}
             </div>
         );
     }
