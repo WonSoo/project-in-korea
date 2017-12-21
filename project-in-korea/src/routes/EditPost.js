@@ -238,7 +238,7 @@ class EditPost extends Component {
             }
         }
 
-        axios.post('http://real-home.iptime.org:3000/request/post', data)
+        axios.put('http://real-home.iptime.org:3000/request/post/' + this.props.match.params.id, data)
             .then((response) => {
                 console.log(response);
                 if (response.status == 200) {
