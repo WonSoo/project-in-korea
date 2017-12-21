@@ -69,6 +69,7 @@ class ViewPost extends Component {
                     <Header />
                     <Nav />
                     <h1 className="ViewPost-name">{postData.project_name}</h1>
+                    <a className="edit-button" href={"/EditPost/" + this.props.match.params.id}>수정하기</a>
                     <div className="content-panel">
                         <table className="ViewPost-table">
                             <tr>

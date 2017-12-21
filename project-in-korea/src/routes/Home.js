@@ -126,9 +126,10 @@ class Home extends Component {
     }
 
     articleOnClickHandler(id) {
-        this.setState({
-            redirectTo: id
-        })
+        // this.setState({
+        //     redirectTo: id
+        // })
+        window.location.href = "http://localhost:3000/post/" + id;
     }
 
     interestClickHandler(selectedID) {

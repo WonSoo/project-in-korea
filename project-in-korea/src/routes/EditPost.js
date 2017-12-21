@@ -26,11 +26,15 @@ const ckConfig = {
 }
 
 
-class WritePost extends Component {
+class EditPost extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            postData: { "_id" : 1, "request" : "write", "type" : "recruit", "id" : "jkh6100", "name" : "asdfasdf", "contact" : "asdf", "project_name" : "asdf", "project_purpose" : "asdf", "colortags" : { "activity" : 3, "technical" : 3, "academic" : 0, "public_interest" : 0, "artistic" : 0, "modern" : 0 }, "big_category" : "comic", "work_type" : "online", "pay" : true, "pay_amount" : "asd", "project_duration" : "1", "recruit_start" : { "$numberLong" : "1507645127872" }, "recruit_end" : { "$numberLong" : "1507075200000" }, "jobgroup" : [{ "name" : "asdf" }], "content" : "<p>asdfasdf</p>\n", "files" : { "0" : null }, "time" : "Tue Oct 10 23:18:47 KST 2017", "writer" : "1944071622532958" }, 
             payType: true,
+            name: "",
+            contact: "",
+            project_name: "",
             howMuchPay: 0,
             memberList: [(<AddMemberInput renderRemoveButton={false} job="" howMany={1} onJobChange={(event) => {
                 this.jobList[0].name = event.target.value;
@@ -38,6 +42,8 @@ class WritePost extends Component {
                 this.jobList[0].howMany = event.target.value;
             }} />)],
             content: '',
+            month: 1,
+            dday: 0,
             editorState: EditorState.createEmpty(),
             project_purpose: '',
             offlineOrOnline: 'online'
@@ -61,6 +67,36 @@ class WritePost extends Component {
         this.sendPost = this.sendPost.bind(this);
         this.successWriteCallback = this.successWriteCallback.bind(this);
     }
+
+    componentWillMount() {
+        this.getArticle();
+    }
+
+    getArticle() {
+        axios.get('http://real-home.iptime.org:3000/request/postOne/' + this.props.match.params.id)
+        .then((response) => {
+            console.log(response);
+            if (response.status == 200) {
+                console.log(response.data)
+                 this.setState({
+                    postData: JSON.parse(response.data),
+                    name: response.data.name,
+                    contact: response.data.contact,
+                    project_purpose: response.project_purpose,
+                    project_name: response.project_name,
+                    offlineOrOnline: response.work_type,
+                    payType: response.pay,
+                    month: response.project_duration,
+                    dday: response.recruit_end,
+                    editorState: EditorState.createWithContent(response.content)
+                 });
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
 
     successWriteCallback(res) {
         console.log(res);
@@ -257,17 +293,17 @@ class WritePost extends Component {
                             <div className="input-group contact-input-group">
                                 <div className="name-input">
                                     <label htmlFor="name">이름:</label>
-                                    <input type="text" id="name" name="name" onChange={this.handleInputChange} required />
+                                    <input type="text" value={this.state.name} id="name" name="name" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="contact-input">
                                     <label htmlFor="contact">연락망:</label>
-                                    <input type="text" id="contact" name="contact" onChange={this.handleInputChange} required />
+                                    <input type="text" value={this.state.contact} id="contact" name="contact" onChange={this.handleInputChange} required />
                                 </div>
                             </div>
                             <div className="input-group project-summary-input-group">
                                 <div className="project-name-input">
                                     <label htmlFor="project_name">프로젝트명:</label>
-                                    <input type="text" id="project_name" name="project_name" onChange={this.handleInputChange} required />
+                                    <input type="text" value={this.state.project_name} id="project_name" name="project_name" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="project-perpose-input">
                                     <label htmlFor="project-perpose">프로젝트 목적:</label>
@@ -307,11 +343,11 @@ class WritePost extends Component {
                                 </div>
                                 <div className="project-day-type">
                                     <span>프로젝트 기간:</span>
-                                    <input type="number" name="month" min="1" step="1" onChange={this.handleInputChange} required />
+                                    <input type="number" value={this.state.month} name="month" min="1" step="1" onChange={this.handleInputChange} required />
                                 </div>
                                 <div className="project-dday-type">
                                     <span>모집 기간:</span>
-                                    <input type="date" name="dday" onChange={this.handleInputChange} required />
+                                    <input type="date" value={this.state.dday} name="dday" onChange={this.handleInputChange} required />
                                 </div>
                             </div>
                             <div className="input-group project-member">
@@ -321,6 +357,8 @@ class WritePost extends Component {
                                     <span onClick={this.addMember}>+</span>
                                 </div>
                             </div>
+
+
                         </form>
                         <Editor
                             editorState={this.state.editorState}
@@ -331,11 +369,13 @@ class WritePost extends Component {
                                 image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
                             }}
                         />
+                        {/*<CKEditor activeClass="p10" config={ckConfig} content={this.state.content} onChange={this.updateContent} />*/}
                         <button onClick={this.sendPost}>전송</button>
                     </div>
+                    {/*<img src={testImg} />*/}
                 </div>
             </div>
         );
     }
 }
-export default WritePost;
+export default EditPost;

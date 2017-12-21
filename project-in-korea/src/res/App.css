@@ -131,7 +131,7 @@ header {
 .content-panel {
     /*background-color: #555756;*/
     height: 800px;
-    margin-top: 5px;
+    margin-top: 50px;
 }
 
 .specific-search-panel {
@@ -588,5 +588,12 @@ input {
     letter-spacing: 0;
     width: 86px;
     letter-spacing: -2px;
+}
+
+.edit-button {
+    position: absolute;
+    right: 0;
+    margin-right: 90px;
+    margin-bottom: 50px;
 }
 
