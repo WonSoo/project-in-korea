@@ -15,6 +15,7 @@ class ViewPost extends Component {
         super();
         this.state = { postData: { "_id" : 1, "request" : "write", "type" : "recruit", "id" : "jkh6100", "name" : "asdfasdf", "contact" : "asdf", "project_name" : "asdf", "project_purpose" : "asdf", "colortags" : { "activity" : 3, "technical" : 3, "academic" : 0, "public_interest" : 0, "artistic" : 0, "modern" : 0 }, "big_category" : "comic", "work_type" : "online", "pay" : true, "pay_amount" : "asd", "project_duration" : "1", "recruit_start" : { "$numberLong" : "1507645127872" }, "recruit_end" : { "$numberLong" : "1507075200000" }, "jobgroup" : [{ "name" : "asdf" }], "content" : "<p>asdfasdf</p>\n", "files" : { "0" : null }, "time" : "Tue Oct 10 23:18:47 KST 2017", "writer" : "1944071622532958" } };
         this.getArticle = this.getArticle.bind(this);
+        this.deletePost = this.deletePost.bind(this);
     }
 
     componentWillMount() {
@@ -30,6 +31,18 @@ class ViewPost extends Component {
                  this.setState({
                     postData: JSON.parse(response.data)
                  });
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    deletePost() {
+        axios.delete('http://real-home.iptime.org:3000/request/post/' + this.props.match.params.id)
+        .then((response) => {
+            if (response.status == 200) {
+                window.location.href = "/home"
             }
         })
         .catch(function (error) {
@@ -70,6 +83,7 @@ class ViewPost extends Component {
                     <Nav />
                     <h1 className="ViewPost-name">{postData.project_name}</h1>
                     <a className="edit-button" href={"/EditPost/" + this.props.match.params.id}>수정하기</a>
+                    <span className="delete-button" onClick={this.deletePost}>삭제하기</span>
                     <div className="content-panel">
                         <table className="ViewPost-table">
                             <tr>

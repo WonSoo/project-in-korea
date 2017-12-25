@@ -181,7 +181,9 @@ class Home extends Component {
                 <div className="root-container">
 
                     <SlidePanel />
-                    <SearchBar />
+                    <SearchBar onSearchResult={(articles)=>{this.setState({
+                        articles: articles
+                    })}}/>
                     <div className="specific-search-panel">
                         상세검색 미정
             </div>

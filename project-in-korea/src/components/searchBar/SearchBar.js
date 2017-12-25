@@ -118,20 +118,19 @@ class SearchBar extends Component {
     }
 
     search() {
-        axios.get('http://real-home.iptime.org:3000/request/post/getKeyword/', {
-            searchText: this.state.searchText,
-            category: this.state.selectedCategory,
-            colorTags: this.state.colorTagList
+        axios.post('http://real-home.iptime.org:3000/request/post/getKeyword/', {
+            project_name: this.state.searchText,
+            big_category: this.state.selectedCategory,
+            colortags: this.state.colorTagList
         })
         .then((response) => {
             console.log(response);
-            // if (response.status == 200) {
-            //     const parsedRes = response.data.map((item) => {
-            //         return JSON.parse(item)
-            //     });
-            //     console.log(parsedRes)
-            //     this.setState({ articles: parsedRes });
-            // }
+            if (response.status == 200) {
+                const parsedRes = response.data.map((item) => {
+                    return JSON.parse(item)
+                });
+                this.props.onSearchResult(parsedRes)
+            }
         })
         .catch(function (error) {
             console.log(error);

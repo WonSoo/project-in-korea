@@ -597,3 +597,10 @@ input {
     margin-bottom: 50px;
 }
 
+.delete-button {
+    position: absolute;
+    right: 0;
+    margin-right: 150px;
+    margin-bottom: 50px;
+}
+
