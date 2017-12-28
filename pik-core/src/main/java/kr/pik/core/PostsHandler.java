@@ -138,14 +138,15 @@ public class PostsHandler extends WebVerticle {
             routingContext.response().setStatusCode(400);
             routingContext.response().setStatusMessage("please relogin");
             routingContext.response().end();
+        } else{
+            json.put("writer", LoginHandler.getIdFromAccessToken(routingContext.session().get(routingContext.getCookie("login_session").getValue())));
+
+            this.database.insert("grams", Document.parse(json.toString()));
+            routingContext.response().setStatusCode(200);
+            routingContext.response().setStatusMessage("post writed");
+            routingContext.response().end();
         }
 
-        json.put("writer", LoginHandler.getIdFromAccessToken(routingContext.session().get(routingContext.getCookie("login_session").getValue())));
-
-        this.database.insert("grams", Document.parse(json.toString()));
-        routingContext.response().setStatusCode(200);
-        routingContext.response().setStatusMessage("post writed");
-        routingContext.response().end();
     }
 
     private void deletePost(RoutingContext routingContext) {

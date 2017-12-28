@@ -9,3 +9,4 @@ build/
 /out/
 /pik-utils/src/main/resources/conf/SecureConfig.xml
 /pik-utils/src/main/resources/log4j2.xml
+*.class
