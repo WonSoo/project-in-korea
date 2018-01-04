@@ -23,32 +23,32 @@ const CategoryConverter = {
 
 const options = [
     { value: 'comic', label: '만화' },
-    { value: 'animation', label: '애니메이션'},
-    { value: 'food', label: '식품'},
-    { value: 'fashion', label: '패션'},
-    { value: 'music', label: '음악'},
-    { value: 'performance', label: '공연'},
-    { value: 'environment', label: '환경'},
-    { value: 'design', label: '디자인'},
-    { value: 'publishing', label: '출판'},
-    { value: 'journalism', label: '저널리즘'},
-    { value: 'game', label: '게임'},
-    { value: 'research', label: '연구'},
-    { value: 'education', label: '교육'},
-    { value: 'machinlearning', label: '머신러닝'},
-    { value: 'vr', label: 'VR'},
-    { value: 'ar', label: 'AR'},
-    { value: 'iot', label: 'IOT'},
-    { value: 'drone', label: '드론'},
-    { value: '3dprinting', label: '3D프린팅'},
-    { value: 'robot', label: '로봇공학'}
+    { value: 'animation', label: '애니메이션' },
+    { value: 'food', label: '식품' },
+    { value: 'fashion', label: '패션' },
+    { value: 'music', label: '음악' },
+    { value: 'performance', label: '공연' },
+    { value: 'environment', label: '환경' },
+    { value: 'design', label: '디자인' },
+    { value: 'publishing', label: '출판' },
+    { value: 'journalism', label: '저널리즘' },
+    { value: 'game', label: '게임' },
+    { value: 'research', label: '연구' },
+    { value: 'education', label: '교육' },
+    { value: 'machinlearning', label: '머신러닝' },
+    { value: 'vr', label: 'VR' },
+    { value: 'ar', label: 'AR' },
+    { value: 'iot', label: 'IOT' },
+    { value: 'drone', label: '드론' },
+    { value: '3dprinting', label: '3D프린팅' },
+    { value: 'robot', label: '로봇공학' }
 ];
 
 
 class Home extends Component {
     constructor() {
         super();
-        this.state = { 
+        this.state = {
             articles: [
                 {
                     recruit_end: {
@@ -63,7 +63,7 @@ class Home extends Component {
             ],
             redirectTo: null,
             isInterested: false
-         };
+        };
         this.getArticleList = this.getArticleList.bind(this);
         this.articleOnClickHandler = this.articleOnClickHandler.bind(this);
     }
@@ -103,14 +103,14 @@ class Home extends Component {
         let result = colors.map((color) => this.hexToRgb(color)).reduce((acc, cur) => {
             cur.r += acc.r;
             cur.g += acc.g;
-            cur.b += acc.b;            
-            return cur  
+            cur.b += acc.b;
+            return cur
         });
 
         result.r /= colors.length;
         result.g /= colors.length;
         result.b /= colors.length;
-        
+
         return `rgb(${result.r}, ${result.g}, ${result.b})`;
     }
 
@@ -118,7 +118,7 @@ class Home extends Component {
         let result = colors.map((color) => this.hexToRgb(color)).reduce((acc, cur) => {
             cur.r += acc.r;
             cur.g += acc.g;
-            cur.b += acc.b;            
+            cur.b += acc.b;
             return cur
         });
 
@@ -136,8 +136,8 @@ class Home extends Component {
         console.log("td clicked")
         let editedArticles = [...this.state.articles];
         editedArticles = editedArticles.map((article) => {
-            if(article._id == selectedID) {}
-                article.isInterested = !article.isInterested;
+            if (article._id == selectedID) { }
+            article.isInterested = !article.isInterested;
             return article
         });
         console.log(editedArticles)
@@ -147,12 +147,12 @@ class Home extends Component {
     }
 
     render() {
-        console.info(this.ColorMix(['#FF0000', '#00FF00', '#0000FF']))  
+        console.info(this.ColorMix(['#FF0000', '#00FF00', '#0000FF']))
         const articles = this.state.articles.map((article) => {
-            console.log(Math.floor(1231231298712 / 1231232))    
+            console.log(Math.floor(1231231298712 / 1231232))
             console.log(Math.floor((Number(new Date().getTime()) - Number(article.recruit_end.$numberLong)) / (1000 * 60 * 60 * 24)))
             const element =
-                (<tr onClick={(e)=>{
+                (<tr onClick={(e) => {
                     console.log(e)
                     this.articleOnClickHandler(article._id);
                 }}>
@@ -163,10 +163,10 @@ class Home extends Component {
                     <td>{article.name}</td>
                     <td>{article.project_duration}}</td>
                     <td>디 {Math.floor((Number(new Date().getTime()) - Number(article.recruit_end.$numberLong)) / (1000 * 60 * 60 * 24))}</td>
-                    <td  className="fire" className={(article.isInterested ? 'interested' : '')} onClick={(e)=> {
+                    <td className="fire" className={(article.isInterested ? 'interested' : '')} onClick={(e) => {
                         if (!e) var e = window.event;                // Get the window event
                         e.cancelBubble = true;                       // IE Stop propagation
-                        if (e.stopPropagation) e.stopPropagation();                         
+                        if (e.stopPropagation) e.stopPropagation();
                         this.interestClickHandler(article._id)
                     }}><span className="fire">흥미롭군</span></td>
                 </tr>)
@@ -174,16 +174,18 @@ class Home extends Component {
         })
         return (
             <div className="App">
-                                <div className="header-wrap">
-                <Header />
-                <Nav />
-            </div>
+                <div className="header-wrap">
+                    <Header />
+                    <Nav />
+                </div>
                 <div className="root-container">
 
                     <SlidePanel />
-                    <SearchBar onSearchResult={(articles)=>{this.setState({
-                        articles: articles
-                    })}}/>
+                    <SearchBar onSearchResult={(articles) => {
+                        this.setState({
+                            articles: articles
+                        })
+                    }} />
                     <div className="specific-search-panel">
                         상세검색 미정
             </div>
@@ -202,20 +204,20 @@ class Home extends Component {
                                 <td style={{
                                     // backgroundColor: this.ColorMixAdditive(['#cf010d', '#027ad1', '#f19914', '#048e1e', '#fdf21e', '#7a006b'])
                                     backgroundColor: this.ColorMixAdditive(['#cf010d', '#cf010d', '#f0b414'])
-                                    
+
                                 }}><span>푸드</span></td>
                                 <td>친환경 딸기 잼</td>
                                 <td>전성우</td>
                                 <td>2017.12.25</td>
                                 <td>디 3</td>
-                                <td  className="fire">흥미롭군</td>
+                                <td className="fire">흥미롭군</td>
                             </tr>
                             <tr>
                                 <td style={{
                                     // backgroundColor: this.ColorMixAdditive(['#cf010d', '#027ad1', '#f19914', '#048e1e', '#fdf21e', '#7a006b'])
                                     background: `linear-gradient(90deg, #cf010d, #cf010d 16%, #027ad1 16%, #027ad1 32%, #f19914 32%, #f19914 46%, #048e1e 46%, #048e1e 62%, #fdf21e 62%, #fdf21e 78%, #7a006b 78%)`
                                     // this.ColorMixAdditive(['#cf010d', '#f0b414'])
-                                    
+
                                 }}><span>푸드</span></td>
                                 <td>친환경 딸기 잼</td>
                                 <td>전성우</td>
