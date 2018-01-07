@@ -150,9 +150,9 @@ class Home extends Component {
         console.info(this.ColorMix(['#FF0000', '#00FF00', '#0000FF']))
         const articles = this.state.articles.map((article) => {
             console.log(Math.floor(1231231298712 / 1231232))
-            console.log(Math.floor((Number(new Date().getTime()) - Number(article.recruit_end.$numberLong)) / (1000 * 60 * 60 * 24)))
+            console.log(Math.floor((Number(new Date().getTime()) - (!!article.recruit_end ? Number(article.recruit_end.$numberLong) : 0)) / (1000 * 60 * 60 * 24)))
             const element =
-                (<tr onClick={(e) => {
+                (<tr key={article._id} onClick={(e) => {
                     console.log(e)
                     this.articleOnClickHandler(article._id);
                 }}>
@@ -162,7 +162,7 @@ class Home extends Component {
                     <td>{article.project_name}</td>
                     <td>{article.name}</td>
                     <td>{article.project_duration}}</td>
-                    <td>디 {Math.floor((Number(new Date().getTime()) - Number(article.recruit_end.$numberLong)) / (1000 * 60 * 60 * 24))}</td>
+                    <td>디 {Math.floor((Number(new Date().getTime()) - (!!article.recruit_end ? Number(article.recruit_end.$numberLong) : 0)) / (1000 * 60 * 60 * 24))}</td>
                     <td className="fire" className={(article.isInterested ? 'interested' : '')} onClick={(e) => {
                         if (!e) var e = window.event;                // Get the window event
                         e.cancelBubble = true;                       // IE Stop propagation
@@ -172,6 +172,7 @@ class Home extends Component {
                 </tr>)
             return element;
         })
+        console.log(articles)
         return (
             <div className="App">
                 <div className="header-wrap">
