@@ -5,6 +5,8 @@
 
 package kr.pik.core;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
@@ -13,6 +15,8 @@ import io.vertx.ext.web.*;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+
 import kr.pik.utils.database.Database;
 import org.bson.Document;
 
@@ -30,7 +34,7 @@ public class PostsHandler extends WebVerticle {
 
     public void start() {
         this.Initialize();
-        router.get("/request/post/getKeyword").handler(this::getKeyword);
+        this.router.get("/request/post/getKeyword").handler(this::getKeyword);
         this.router.get("/request/post/:amount").handler(this::getPostMany);
         this.router.get("/request/postOne/:id").handler(this::getPostOne);
         this.router.get("/request/image/:filename").handler(this::getPostImage);
@@ -40,25 +44,30 @@ public class PostsHandler extends WebVerticle {
     }
 
     private void getKeyword(RoutingContext routingContext) {
-        JsonArray receivedMessage = routingContext.getBodyAsJsonArray();
-        System.out.println(receivedMessage);
-//        String[] colorTags = receivedMessage.get
-//
-//
-//
-//        routingContext.response().setChunked(true);
-//        Document searchQuery = new Document();
-//        searchQuery.put("$or", new Document("title",java.util.regex.Pattern.compile(startWith)));
-//        searchQuery.put("$or", new Document("content",java.util.regex.Pattern.compile(startWith)));
-//        searchQuery.put("$or", new Document("content",java.util.regex.Pattern.compile(startWith)));
-//        searchQuery.put("$or", new Document("content",java.util.regex.Pattern.compile(startWith)));
-//
-//        JsonArray jsonArray = database.findKeyword("posts", searchQuery);
-//
-//        System.out.println(jsonArray.toString());
+        String projectName = routingContext.request().getParam("project_name");
+        String bigCategory = routingContext.request().getParam("big_category");
+        List<String> colorTags = routingContext.request().params().getAll("colortags[]");
 
+        System.out.println("project_name: " + projectName);
+        System.out.println("big_category: " + bigCategory);
+        System.out.println("colortags: " + colorTags);
+
+        Document searchQuery = new Document();
+        searchQuery.put("project_name", projectName);
+        searchQuery.put("big_category", bigCategory);
+        searchQuery.put("colortags", colorTags);
+        JsonArray response = this.database.findKeyword("grams" , searchQuery);
+        MongoCursor<Document> cursor = this.database.getCollection("grams").find().iterator();
+        JsonArray jsonArray = new JsonArray();
+        while(cursor.hasNext())
+            jsonArray.add(cursor.next().toJson());
+
+
+
+        System.out.println("response: " + response);
+        System.out.println("jsonArray: " + jsonArray);
         String responseMessage = "Test...";
-        routingContext.response().end(responseMessage);
+        routingContext.response().end(response.toString());
     }
 
     private void getPostImage(RoutingContext routingContext) {
