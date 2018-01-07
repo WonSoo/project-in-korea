@@ -6,6 +6,7 @@
 package kr.pik.core;
 
 import com.google.gson.Gson;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Cookie;
@@ -91,6 +92,20 @@ public class LoginHandler extends WebVerticle {
     }
 
     private void requestLogin(RoutingContext routingContext) {
+        String name = "foo";
+        String value = "bar";
+        long age = 158132000l; //5 years in seconds
+        Cookie te2 = Cookie.cookie(name,value);
+        String path = "/"; //give any suitable path
+        te2.setPath(path);
+        te2.setMaxAge(age); //if this is not there, then a session cookie is set
+        routingContext.addCookie(te2);
+
+        routingContext.response().setChunked(true);
+        routingContext.response().putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        routingContext.response().putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET");
+
+
         HttpServerResponse response = routingContext.response();
         JsonObject json = routingContext.getBodyAsJson();
         String type = json.getString("type");
