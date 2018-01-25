@@ -18,6 +18,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw, } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import axios from 'axios';
+import config from '../config';
 
 
 
@@ -73,7 +74,7 @@ class EditPost extends Component {
     }
 
     getArticle() {
-        axios.get('http://real-home.iptime.org:3000/request/postOne/' + this.props.match.params.id)
+        axios.get(config.host + '/request/postOne/' + this.props.match.params.id)
         .then((response) => {
             console.log(response);
             if (response.status == 200) {
@@ -100,7 +101,7 @@ class EditPost extends Component {
 
     successWriteCallback(res) {
         console.log(res);
-        axios.post('http://real-home.iptime.org:3000/request/login', {
+        axios.post(config.host + '/request/login', {
             request: 'login',
             type: 'facebook',
             accessToken: res.accessToken
@@ -238,7 +239,7 @@ class EditPost extends Component {
             }
         }
 
-        axios.put('http://real-home.iptime.org:3000/request/post/' + this.props.match.params.id, data)
+        axios.put(config.host + '/request/post/' + this.props.match.params.id, data)
             .then((response) => {
                 console.log(response);
                 if (response.status == 200) {

@@ -9,6 +9,7 @@ import SearchIcon from '../res/images/icons/ic_search.png'
 import fire from '../res/images/fire.gif'
 import SearchBar from '../components/searchBar/SearchBar'
 import axios from 'axios'
+import config from '../config';
 
 class ViewPost extends Component {
     constructor() {
@@ -23,7 +24,7 @@ class ViewPost extends Component {
     }
 
     getArticle() {
-        axios.get('http://real-home.iptime.org:3000/request/postOne/' + this.props.match.params.id)
+        axios.get(config.host + '/request/postOne/' + this.props.match.params.id)
         .then((response) => {
             console.log(response);
             if (response.status == 200) {
@@ -39,7 +40,7 @@ class ViewPost extends Component {
     }
 
     deletePost() {
-        axios.delete('http://real-home.iptime.org:3000/request/post/' + this.props.match.params.id)
+        axios.delete(config.host + '/request/post/' + this.props.match.params.id)
         .then((response) => {
             if (response.status == 200) {
                 window.location.href = "/home"

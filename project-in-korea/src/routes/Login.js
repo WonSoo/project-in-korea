@@ -15,6 +15,7 @@ import naverImg from '../res/images/sns/ic_naver.png';
 import twitterImg from '../res/images/sns/ic_twitter.png';
 import axios from 'axios';
 import { Redirect } from 'react-router'
+import config from '../config.js'
 
 
 class Login extends Component {
@@ -28,7 +29,7 @@ class Login extends Component {
 
     successLoginCallback(res) {
         console.log(res);
-        axios.post('http://real-home.iptime.org:3000/request/login', {
+        axios.post(config.host + '/request/login', {
             request: 'login',
             type: 'facebook',
             accessToken: res.accessToken

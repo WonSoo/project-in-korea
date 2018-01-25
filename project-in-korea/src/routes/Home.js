@@ -11,6 +11,9 @@ import SearchBar from '../components/searchBar/SearchBar'
 import axios from 'axios';
 import ColorMixer from 'ryb-color-mixer';
 import { Redirect } from 'react-router'
+import image from '../res/images/person.jpg'
+import ImagePost from '../components/ImagePost';
+import config from '../config';
 
 const CategoryConverter = {
     comic: '만화',
@@ -62,10 +65,19 @@ class Home extends Component {
                 }
             ],
             redirectTo: null,
-            isInterested: false
+            isInterested: false,
+            isListView: true
+            
         };
         this.getArticleList = this.getArticleList.bind(this);
         this.articleOnClickHandler = this.articleOnClickHandler.bind(this);
+        this.ChangeViewMode = this.ChangeViewMode.bind(this);
+    }
+
+    ChangeViewMode() {
+        this.setState({
+            isListView: !this.state.isListView
+        })
     }
 
     componentWillMount() {
@@ -74,7 +86,7 @@ class Home extends Component {
 
     getArticleList() {
         console.log("asdfasdfasdfasdfasf")
-        axios.get('http://real-home.iptime.org:3000/request/post/' + 10)
+        axios.get(config.host + '/request/post/' + 10)
             .then((response) => {
                 console.log(response);
                 if (response.status == 200) {
@@ -186,22 +198,41 @@ class Home extends Component {
                         this.setState({
                             articles: articles
                         })
-                    }} />
+                    }} ChangeViewMode={this.ChangeViewMode} />
                     <div className="specific-search-panel">
                         상세검색 미정
             </div>
                     <div className="content-panel">
-                        <table className="article-table">
-                            <tr>
-                                <th>태그</th>
-                                <th>제목</th>
-                                <th>작성자</th>
-                                <th>기간</th>
-                                <th>마감기간</th>
-                                <th>흥미롭군</th>
-                            </tr>
-                            {articles}
-                        </table>
+                    {
+                        this.state.isListView ? (<table className="article-table">
+                        <tr>
+                            <th>태그</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>기간</th>
+                            <th>마감기간</th>
+                            <th>흥미롭군</th>
+                        </tr>
+                        {articles}
+                    </table>) : 
+                    (<div className="Image-post-container">
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+                        <ImagePost author="소진홍" comment="예예예예예예예예예예예예" date="2019-12-12" image={image} />
+
+                    </div>)
+                    }
+                        
                     </div>
                 </div>
                 {this.state.redirectTo && (

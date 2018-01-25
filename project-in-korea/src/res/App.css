@@ -194,6 +194,29 @@ header {
     height: 32px;
     margin: 2.5px;
 }
+.simple-table{
+    border-spacing: 5px;
+}
+.simple-table td:nth-child(1) {
+    background-color: #f6f6f6;
+    width: 800px;
+}
+.simple-table td:nth-child(2) {
+    background-color: #f6f6f6;
+    text-align: left;
+    width: 90px;
+}
+
+.simple-table td:nth-child(3) {
+    background-color: #f6f6f6;
+    /*height: 50px;
+    border-bottom: 2px solid black;
+    padding-top: 20px;*/
+    text-align: center;
+    width: 76px;
+    height: 32px;
+    margin: 2.5px;
+}
 
 .red {
     background: red !important;
@@ -604,3 +627,69 @@ input {
     margin-bottom: 50px;
 }
 
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    float: left;
+    margin-right: 20px; 
+}
+
+.profile, .HowMe, .etcArticle {
+    /* border: solid black 1px; */
+    box-sizing: border-box;
+    /* padding: 20px; */
+}
+
+.profile {
+    height: 130px;
+}
+
+.HowMe {
+    height: 40px;
+    padding: 0;
+}
+
+.etcArticle {    
+}
+
+.Black-line {
+    height: 1px;
+    background: black;
+    width: calc(100% - 10px);
+    margin: 2.5px 5px;
+}
+
+.Image-post-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.Image-post {
+    flex: 1;
+    width: 244px;
+    background:  #f6f6f6;
+}
+
+.Image-post-thumnail {
+    width: 240px;
+    height: 220px;
+}
+
+.Image-post-interesting {
+    background: red;
+    text-align: right;
+    display: inline-block;
+}
+
+.Image-post-date {
+    text-align: right;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.Image-post-name {
+    display: inline-block;
+    width: 100px;
+}

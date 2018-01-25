@@ -18,6 +18,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertToRaw, } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import axios from 'axios';
+import config from '../config';
 
 
 
@@ -64,7 +65,7 @@ class WritePost extends Component {
 
     successWriteCallback(res) {
         console.log(res);
-        axios.post('http://real-home.iptime.org:3000/request/login', {
+        axios.post(config.host + '/request/login', {
             request: 'login',
             type: 'facebook',
             accessToken: res.accessToken
@@ -202,7 +203,7 @@ class WritePost extends Component {
             }
         }
 
-        axios.post('http://real-home.iptime.org:3000/request/post', data)
+        axios.post(config.host + '/request/post', data)
             .then((response) => {
                 console.log(response);
                 if (response.status == 200) {

@@ -216,7 +216,7 @@ class SearchBar extends Component {
                     <li className="search-item"><SearchBox handleSearchTextChange={this.handleSearchTextChange} /></li>
                     <li className="search-item"><SearchBtn search={this.search} /></li>
                     <li className="search-item"><WriteArticleBtn /></li>
-                    <li className="search-item"><ViewModeBtn /></li>
+                    <li className="search-item" onClick={this.props.ChangeViewMode}><ViewModeBtn /></li>
                     {this.state.isExpend ? <li className="search-item" style={{ marginTop: '5px', height: 'auto' }}><ExpendSearchArea handleColorTagChange={this.handleColorTagChange} categoryData={this.state.categorys} onCategoryChange={this.selectCategory}/></li> : null}
                 </ul>
             </div>
