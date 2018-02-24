@@ -5,9 +5,11 @@
     src: local('cute'), url(./cute.ttf) format('truetype');
 }
 @import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+@import url(http://fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
+
 
 * {
-    font-family: 'cute', 'Jeju Gothic', serif;
+    font-family: 'Nanum Myeongjo', 'cute', 'Jeju Gothic', serif !important;
 }
 
 body {
