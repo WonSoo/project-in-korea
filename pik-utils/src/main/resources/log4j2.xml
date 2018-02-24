@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout/>
+        </Console>
+        <File name="file" fileName="./logs/project-in-korea.log" append="false">
+            <PatternLayout pattern="%d %5p [%c] %m%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="Logger" level="INFO" additivity="false">
+            <AppenderRef ref="file"/>
+        </Logger>
+        <Root level="ERROR">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>
