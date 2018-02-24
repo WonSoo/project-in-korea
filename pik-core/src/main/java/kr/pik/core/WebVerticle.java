@@ -41,7 +41,7 @@ public class WebVerticle extends AbstractVerticle {
         gramsHandler.start();
         LoginHandler loginHandler = new LoginHandler();
         loginHandler.start();
-        router.route().handler(StaticHandler.create("webroot"));
+        router.route().handler(StaticHandler.create("build"));
     }
 
     public void stop() throws Exception {
