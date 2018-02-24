@@ -1,0 +1,156 @@
+/*@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+* {
+    font-family: 'Jeju Gothic', serif;
+}*/
+@font-face {
+    font-family: 'cute';
+    src: local('cute'), url(./cute.ttf) format('tty');
+}
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+
+* {
+    font-family: 'cute', 'Jeju Gothic', serif;
+}
+
+body {
+    background-color: #efefef;
+}
+
+.login-container {
+    /*background-color: gray;*/
+    margin: 0 auto;
+    width: 260px !important;
+    /*text-align: center;*/
+    /*display: inline-block;*/
+}
+
+.login-text-input {
+    width: 100%;
+    border: 2px solid black;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    height: 36px;
+    display: inline-block;
+    padding: 5px;
+}
+
+.login-icon-container {
+    margin-bottom: 20px;
+}
+
+.login-button {
+    width: 100%;
+    background-color: black;
+    color: white;
+    height: 36px;
+    margin-top: 55px;
+    margin-bottom: 5px;
+}
+
+.login-menu-container {
+    border-top: 2px solid black;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.login-menu-container ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 5px;
+    font-size: 1rem;
+}
+
+.sns-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.sns-container ul li {
+    list-style: none;
+    display: inline-block;
+    /*margin: 10px;*/
+    width: 25%;
+}
+
+.sns-container ul li a img {
+    /*height: 40px;*/
+}
+
+.social-icon {
+    width: 84px;
+    height: 45px;
+    line-height: 45px;
+    /*margin: 10px;*/
+    text-align: center;
+    display: inline-block;
+}
+
+.facebook-icon {
+    background-color: #3b5998;
+    color: white
+}
+
+.naver-icon {
+    background-color: #00c73c;
+    color: white;
+}
+
+.twitter-icon {
+    background-color: #48a9e0;
+    color: white;
+}
+
+.google-icon {
+    background-color: white;
+    color: black;
+}
+
+.login-form {}
+
+.login-form input[type="text"], .login-form input[type="email"], .login-form input[type="password"] {
+    margin-top: 10px;
+    width: 100%;
+    height: 45px;
+    font-family: sans-serif;
+    color: black;
+}
+
+#remember-check {
+    height: 11px;
+    width: auto;
+}
+
+.login-form button, #login-submit {
+    background-color: #fd5c9f;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    color: white;
+    border: none;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: #e4e4e4;
+}
+
+.login-menus {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-menus li {
+    display: inline-block;
+    margin: 5px;
+}
+
+.login-menus li a {
+    text-decoration: none;
+}
+
+.facebook-login-icon {
+
+}
