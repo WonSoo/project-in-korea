@@ -6,7 +6,7 @@ import RecruitPosterContainer from './RecruitPosterContainer';
 const Container = styled.div`
     text-align: center;
     height: 570px;
-    overflow:hide;
+    overflow: hidden;
 `;
 
 export default () => (
@@ -23,7 +23,6 @@ export default () => (
                     <RecruitPoster img={"http://mypnu.net/files/attach/images/107881/389/740/005/833948fd0b0e48e21674e9f634d0c451.jpg"} />
                     <RecruitPoster img={"http://stu.ssu.ac.kr/xe/files/attach/images/107/518/001/6c32ab760afa6498800f65c82177bf1e.gif"} />
                     <RecruitPoster img={"http://pds27.egloos.com/pds/201306/25/94/f0339294_51c98e467c10f.png"} />
-
                 </RecruitPosterContainer>
     </Container>
 )

@@ -11,4 +11,3 @@ const paperSizeImg =  styled.img`
 export default () => (
     <img src={PinSvg} style={{height: "60px", width: "60px", position: "absolute", left: "66px", top: "0px"}} />
 )
-
