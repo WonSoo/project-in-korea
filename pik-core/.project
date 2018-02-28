@@ -24,7 +24,7 @@
 		<link>
 			<name>src/main/resources/build</name>
 			<type>2</type>
-			<location>C:/Users/jkh61/Documents/Github/project-in-korea/client/build</location>
+			<locationURI>PARENT-1-PROJECT_LOC/client/build</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
