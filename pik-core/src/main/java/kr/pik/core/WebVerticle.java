@@ -41,6 +41,8 @@ public class WebVerticle extends AbstractVerticle {
         gramsHandler.start();
         LoginHandler loginHandler = new LoginHandler();
         loginHandler.start();
+        FileHandler fileHandler = new FileHandler();
+        fileHandler.start();
         router.route().handler(StaticHandler.create("build"));
     }
 
