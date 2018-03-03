@@ -13,6 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 import io.vertx.core.json.JsonArray;
+
 import org.bson.Document;
 
 public enum Database {
@@ -76,7 +77,7 @@ public enum Database {
         Document document = (Document)this.collection.find(searchQuery).first();
         return document;
     }
-
+    
     public boolean isExist(String collection, String field, String searchKey) {
         Document searchQuery = new Document();
         searchQuery.put(field, searchKey);

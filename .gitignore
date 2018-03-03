@@ -8,3 +8,4 @@ build/
 *.class
 pik-core/src/main/resources/webroot/
 *.class
+/bin/

@@ -5,21 +5,17 @@
 
 package kr.pik.core;
 
-import com.google.gson.Gson;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
 import java.util.HashMap;
 
+import kr.pik.utils.Types.AuthManager;
+import kr.pik.utils.Types.FacebookAuth;
+import kr.pik.utils.Types.PIKAuth;
 import kr.pik.utils.database.Database;
 import kr.pik.content.Account;
 import org.bson.Document;
@@ -41,7 +37,7 @@ public class LoginHandler extends WebVerticle {
     public void start() {
         this.initialize();
         this.router.post("/request/login").handler(this::requestLogin);
-        this.router.post("/request/register").handler(this::register);
+        this.router.post("/request/register").handler(this::requestRegister);
         this.router.get("/aaa").handler(this::checkCanRegister);
     }
 
@@ -52,38 +48,49 @@ public class LoginHandler extends WebVerticle {
             routingContext.next();
         } else {
             routingContext.response().setStatusCode(400);
-            routingContext.response().end("접근 권한이 없습니다.");
+            routingContext.response().end("�젒洹� 沅뚰븳�씠 �뾾�뒿�땲�떎.");
         }
     }
 
-    private void register(RoutingContext routingContext) {
+    private void requestRegister(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
         JsonObject json = routingContext.getBodyAsJson();
+		AuthManager authManager = null;
 
-        String type = json.getString("type");
-        if(type.equals("facebook"))
-        {
-            String accessToken = json.getString("accessToken");
-            try {
-                InputStream input = (new URL("https://graph.facebook.com/me?access_token=" + accessToken)).openStream();
-                Reader reader = new InputStreamReader(input, "UTF-8");
-                Account account = (Account)(new Gson()).fromJson(reader, Account.class);
+		String type = json.getString("account_type");
+
+        if(type.equals("pik")) {
+        	String realname = json.getString("realname");
+        	String email = json.getString("email");
+        	String password = json.getString("password");
+        	String repassword = json.getString("repassword");
+        	
+        	authManager = new PIKAuth(realname, email, password, repassword);
+        	boolean register_result = authManager.register();
+        	if(register_result)
+        	{
                 Session register_session = routingContext.session();
-                register_session.put(register_session.id(), accessToken);
-                Cookie cookie = Cookie.cookie("register_session", register_session.id());
+                register_session.put(register_session.id(), authManager);
+                Cookie cookie = Cookie.cookie("login_session", register_session.id());
                 cookie.setPath("/");
-                response.setStatusCode(200);
                 routingContext.addCookie(cookie);
-                JsonObject response_json = new JsonObject();
-                response_json.put("email", account.getEmail());
-                routingContext.reroute("/register");
-                response.end(response_json.toString());
-            } catch (IOException var11) {
-                var11.printStackTrace();
-            }
+                
+                response.setStatusCode(200);
+                response.setStatusMessage("회원가입에 성공했습니다.");
+                response.end("Registered Successfully.");
+                response.close();
+        	} else{
+        		response.setStatusCode(400);
+        		response.setStatusMessage("회원가입에 실패하셨습니다.");
+        		response.end("Register failed.");
+        		response.close();
+        	}
+        } else{
+        	response.setStatusCode(400);
+        	response.setStatusMessage("회원가입에 실패하셨습니다. 알 수 없는 회원가입 타입입니다.");
+        	response.end("Register failed.");
+        	response.close();
         }
-
-
     }
 
     public static String getIdFromAccessToken(String accessToken)
@@ -92,46 +99,46 @@ public class LoginHandler extends WebVerticle {
     }
 
     private void requestLogin(RoutingContext routingContext) {
-        String name = "foo";
-        String value = "bar";
-        long age = 158132000l; //5 years in seconds
-        Cookie te2 = Cookie.cookie(name,value);
-        String path = "/"; //give any suitable path
-        te2.setPath(path);
-        te2.setMaxAge(age); //if this is not there, then a session cookie is set
-        routingContext.addCookie(te2);
-
-        routingContext.response().setChunked(true);
-        routingContext.response().putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-        routingContext.response().putHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET");
-
-
         HttpServerResponse response = routingContext.response();
         JsonObject json = routingContext.getBodyAsJson();
-        String type = json.getString("type");
-        if(type.equals("facebook"))
-        {
-            String accessToken = json.getString("accessToken");
-            try {
-                InputStream input = (new URL("https://graph.facebook.com/me?type=email,name,picture&access_token=" + accessToken)).openStream();
-                Reader reader = new InputStreamReader(input, "UTF-8");
-                Account account = (Account)(new Gson()).fromJson(reader, Account.class);
-                accounts.put(accessToken, account);
-                JsonObject sendInform = new JsonObject();
-                sendInform.put("email", account.getEmail());
-                sendInform.put("name", account.getName());
-                if (!this.checkRegistered(account.getId())) {
-//                    response.setStatusCode(500);
-//                    response.setStatusMessage("로그인하신 페이스북 아이디는 프인코 회원으로 가입되지 않았습니다. 회원가입 페이지로 이동합니다.");
-//                } else {
-                    Document doc = new Document("type", "facebook").append("id", account.getId());
-                    this.database.insert("accounts", doc);
-                    System.out.println(account.getId()+" created");
-                }
+		AuthManager authManager = null;
 
+		String type = json.getString("account_type");
+
+        if(type.equals("pik")) {
+        	String realname = json.getString("realname");
+        	String email = json.getString("email");
+        	String password = json.getString("password");
+        	String repassword = json.getString("repassword");
+        	
+        	authManager = new PIKAuth(realname, email, password, repassword);
+        	Document login_result = authManager.login();
+        	if(login_result != null)
+        	{
+                Session login_session = routingContext.session();
+                login_session.put(login_session.id(), authManager);
+                Cookie cookie = Cookie.cookie("login_session", login_session.id());
+                cookie.setPath("/");
+                routingContext.addCookie(cookie);
+                
                 response.setStatusCode(200);
-                response.setStatusMessage("로그인 되셨습니다.");
-
+                response.setStatusMessage("로그인에 성공했습니다.");
+                response.end("logined Successfully.");
+                response.close();
+        	} else{
+        		response.setStatusCode(400);
+        		response.setStatusMessage("로그인에 실패하셨습니다.");
+        		response.end("login failed.");
+        		response.close();
+        	}
+        }
+        else if(type.equals("facebook"))
+        {
+        	String accessToken = json.getString("accessToken");
+        	authManager = new FacebookAuth(accessToken);
+        	Document login_result = authManager.login();
+        	
+        	if(login_result != null) {
                 Session login_session = routingContext.session();
                 login_session.put(login_session.id(), accessToken);
                 Cookie cookie = Cookie.cookie("login_session", login_session.id());
@@ -139,11 +146,20 @@ public class LoginHandler extends WebVerticle {
                 response.setStatusCode(200);
                 routingContext.addCookie(cookie);
 
-                response.end(sendInform.toString());
-            } catch (IOException var9) {
-                response.setStatusCode(400);
-                response.setStatusMessage("accessToken is invalid");
-            }
+                response.setStatusMessage("로그인에 성공했습니다.");
+                response.end("logined Successfully.");
+                response.close();
+        	} else{
+        		response.setStatusCode(400);
+        		response.setStatusMessage("로그인에 실패하셨습니다.");
+        		response.end("login failed.");
+        		response.close();
+        	}
+        } else{
+        	response.setStatusCode(400);
+        	response.setStatusMessage("로그인에 실패하셨습니다. 알 수 없는 로그인 타입입니다.");
+        	response.end("login failed.");
+        	response.close();
         }
     }
 
