@@ -8,4 +8,5 @@ export default styled.div`
     overflow:auto;
     border-top: solid 1px #F8f8f8;
     clear: both;
+    margin-top: 60px;
 `;

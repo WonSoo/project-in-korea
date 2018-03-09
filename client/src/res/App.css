@@ -434,7 +434,7 @@ header {
 
 
 
-label {
+/* label {
     width: 112px;
     display: inline-block;
     text-align: center;
@@ -445,7 +445,7 @@ input {
     width: calc(100% - 127px);
     height: 32px;
     box-sizing: border-box;
-}
+} */
 
 .input-group div {
     margin: 2.5px;
