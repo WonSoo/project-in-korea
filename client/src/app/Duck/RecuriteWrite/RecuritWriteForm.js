@@ -16,6 +16,9 @@ import RecuritJob from './RecuritJob';
 import ColorTagSelector from './ColorTagSelector';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+import Axios from '../../util/customAxios';
 
 
 const RecuritFormContainerStyle = styled.div`
@@ -48,8 +51,18 @@ class RecuritWriteForm extends Component {
   constructor(props) {
     super(props);
     this.colorTagList = [];
+    this.state = {
+      editorState: {}
+    }
 
     this.handleColorTagChange = this.handleColorTagChange.bind(this);
+    this.onEditorChange = this.onEditorChange.bind(this);
+  }
+
+  onEditorStateChange(editorState) {
+    this.setState({
+      editorState
+    });
   }
 
   handleColorTagChange(list) {
@@ -57,24 +70,41 @@ class RecuritWriteForm extends Component {
   }
 
   uploadImageCallBack(file) {
-    return new Promise(
-      (resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://api.imgur.com/3/image');
-        xhr.setRequestHeader('Authorization', 'Client-ID XXXXX');
-        const data = new FormData();
-        data.append('image', file);
-        xhr.send(data);
-        xhr.addEventListener('load', () => {
-          const response = JSON.parse(xhr.responseText);
-          resolve(response);
-        });
-        xhr.addEventListener('error', () => {
-          const error = JSON.parse(xhr.responseText);
-          reject(error);
-        });
+    let config = {
+      headers: {
+        Authorization: 'Client-ID 8d26ccd12712fca',
       }
-    );
+    }
+
+    let data = new FormData();
+    data.append('image', file);
+
+    return Axios.post('https://api.imgur.com/3/image', data)
+      .then(function (response) {
+        console.log(response);
+        return response
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+    // return new Promise(
+    //   (resolve, reject) => {
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'https://api.imgur.com/3/image');
+    //     xhr.setRequestHeader('Authorization', 'Client-ID XXXXX');
+    //     const data = new FormData();
+    //     data.append('image', file);
+    //     xhr.send(data);
+    //     xhr.addEventListener('load', () => {
+    //       const response = JSON.parse(xhr.responseText);
+    //       resolve(response);
+    //     });
+    //     xhr.addEventListener('error', () => {
+    //       const error = JSON.parse(xhr.responseText);
+    //       reject(error);
+    //     });
+    //   }
+    // );
   }
 
   render() {
@@ -141,10 +171,12 @@ class RecuritWriteForm extends Component {
           </Grid>
           <Grid.Row>
             <Grid.Column>
-              <Editor                
-                editorStyle={{border: "1px solid #F1F1F1", height: "300px"}}
+              <Editor
+                editorStyle={{ border: "1px solid #F1F1F1", height: "300px" }}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
+                onEditorStateChange={this.onEditorStateChange}
+                editorState={this.state.editorState}
                 toolbar={{
                   inline: { inDropdown: true },
                   list: { inDropdown: true },
