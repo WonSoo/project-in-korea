@@ -18,6 +18,8 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import { EditorState } from 'draft-js';
+
 import Axios from '../../util/customAxios';
 
 
@@ -52,16 +54,26 @@ class RecuritWriteForm extends Component {
     super(props);
     this.colorTagList = [];
     this.state = {
-      editorState: {}
+      editorState: EditorState.createEmpty(),
+      content: ''
+
     }
 
     this.handleColorTagChange = this.handleColorTagChange.bind(this);
-    this.onEditorChange = this.onEditorChange.bind(this);
+    this.onEditorStateChange = this.onEditorStateChange.bind(this);
+  }
+
+  onInputChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    console.log(this.state)
+    console.log(e)
   }
 
   onEditorStateChange(editorState) {
     this.setState({
-      editorState
+      editorState : editorState
     });
   }
 
@@ -70,12 +82,6 @@ class RecuritWriteForm extends Component {
   }
 
   uploadImageCallBack(file) {
-    let config = {
-      headers: {
-        Authorization: 'Client-ID 8d26ccd12712fca',
-      }
-    }
-
     let data = new FormData();
     data.append('image', file);
 
@@ -114,9 +120,9 @@ class RecuritWriteForm extends Component {
           <Grid columns="equal" stackable >
             <Grid.Row stretched>
               <Grid.Column width={12} verticalAlign='middle'>
-                <RecuriteHeaderInput />
+                <RecuriteHeaderInput  name="project_name" value={this.state.project_name} onChange={this.onInputChange}/>
                 <br />
-                <RecuritPurposeInput />
+                <RecuritPurposeInput  name="project_purpose" value={this.state.project_purpose} onChange={this.onInputChange}/>
               </Grid.Column>
               <Grid.Column width={4} verticalAlign='middle'>
                 <RecuritPosterInput />
@@ -129,43 +135,43 @@ class RecuritWriteForm extends Component {
             <Grid.Row>
               <Grid.Column width={5}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>프로젝트 기간 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "30%", margin: "0 10px" }}><RecuritDateInput /></div>
+                <div style={{ display: "inline-block", width: "30%", margin: "0 10px" }}><RecuritDateInput name="project_name" value={this.state.project_name} onChange={this.onInputChange}/></div>
                 <span>개월</span>
               </Grid.Column>
               <Grid.Column width={5}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>태그 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "70%", margin: "0 10px" }}><RecuritTagInput /></div>
+                <div style={{ display: "inline-block", width: "70%", margin: "0 10px" }}><RecuritTagInput name="category" value={this.state.category} onChange={this.onInputChange}/></div>
               </Grid.Column>
 
               <Grid.Column width={5}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>컬러 태그 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><ColorTagSelector onChange={this.handleColorTagChange} /></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><ColorTagSelector name="colortags" onChange={this.onInputChange} /></div>
               </Grid.Column>
 
             </Grid.Row>
             <Grid.Row>
               <Grid.Column width={8}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>작업 형태 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritOnOffline /></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritOnOffline name="work_type" onChange={this.onInputChange}/></div>
               </Grid.Column>
 
               <Grid.Column width={8}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>급여 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritPayInput /></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritPayInput name="pay" onChange={this.onInputChange}/></div>
               </Grid.Column>
             </Grid.Row>
 
             <Grid.Row>
               <Grid.Column width={16}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>모집 기간 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritDuring /></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritDuring name="recurit_during" onChange={this.onInputChange}/></div>
               </Grid.Column>
             </Grid.Row>
 
             <Grid.Row>
               <Grid.Column width={16} verticalAlign='bottom'>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>필요 직군 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritJob /></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritJob name="job_group" onChange={this.onInputChange}/></div>
               </Grid.Column>
             </Grid.Row>
           </Grid>

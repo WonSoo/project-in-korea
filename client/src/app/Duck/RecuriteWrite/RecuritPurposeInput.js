@@ -8,5 +8,5 @@ const RecuritPurposeInputStyle = styled.textarea`
 `;
 
 export const RecuritPurposeInput = (props) => (
-    <RecuritPurposeInputStyle type="text" />
+    <RecuritPurposeInputStyle type="text" {...props}/>
 )

@@ -6,5 +6,5 @@ const RecuriteHeaderInputStyle = styled.input`
 `;
 
 export const RecuriteHeaderInput = (props) => (
-    <RecuriteHeaderInputStyle type="text" />
+    <RecuriteHeaderInputStyle type="text" {...props}/>
 )

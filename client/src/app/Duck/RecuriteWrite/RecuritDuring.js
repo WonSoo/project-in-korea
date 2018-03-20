@@ -18,9 +18,9 @@ class RecuritDuring extends PureComponent {
     render() {
         return (
             <div>
-                <RecuritDateInputStyle type="date" />
+                <RecuritDateInputStyle type="date" name="project_start" {...this.props}/>
                 <span> ~ </span>
-                <RecuritDateInputStyle type="date" />
+                <RecuritDateInputStyle type="date" name="recruit_end" {...this.props}/>
             </div>
         );
     }
