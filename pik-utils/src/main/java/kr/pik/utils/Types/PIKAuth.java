@@ -34,6 +34,7 @@ public class PIKAuth implements AuthManager {
 
 	private Document findUserByEmail() {
 		Document searchQuery = new Document();
+		searchQuery.put("accountType", "pik");
 		searchQuery.put("email", email);
 		Document result = database.getCollection("users").find(searchQuery).first();
 

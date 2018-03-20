@@ -14,7 +14,7 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 import kr.pik.utils.database.Database;
 
 public class WebVerticle extends AbstractVerticle {
-    private static Vertx vertx;
+    protected static Vertx vertx;
     private static Router router;
     private static Database database;
 
