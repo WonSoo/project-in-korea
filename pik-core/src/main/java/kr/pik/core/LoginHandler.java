@@ -123,6 +123,7 @@ public class LoginHandler extends WebVerticle {
 	private void sendMail(String email, String randomNumber) {
 		MailMessage message = new MailMessage();
 		message.setFrom("auth_verify@project-in.kr");
+		message.setCc("Project In Korea <auth_verify@project-in.kr>");
 		message.setTo(email);
 		message.setSubject("프로젝트 인 코리아 회원가입 인증번호 입니다.");
 		message.setText("프로젝트 인 코리아 회원가입 인증번호 입니다.");
