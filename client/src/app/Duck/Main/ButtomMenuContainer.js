@@ -6,6 +6,7 @@ export default styled.div`
     left: 80px;
     bottom: 10px; */
     display: inline-block;
+    height: 100%;
     float: left;
-    margin: 0 0 20px 80px;
+    margin: 0 0 0 80px;
 `;

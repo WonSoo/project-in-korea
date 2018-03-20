@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
+import Link from 'react-router';
 import HeaderContainer from './HeaderContainer';
 import Title from './Title';
 import LoginButton from './LoginButton';
@@ -8,6 +9,8 @@ import MenuButton from './MenuButton';
 import RegisterButton from './RegisterButton';
 import ButtomRightMenuContainer from './ButtomRightMenuContainer';
 import MenuContainer from './MenuContainer';
+import PIKLogo from './PIKLogo';
+import PIKImg from '../../../res/PIKLogo.png'
 
 const HeaderHeight = "320px";
 
@@ -22,16 +25,12 @@ class Main extends PureComponent {
     }
 
     componentDidMount() {
-        console.log(ReactDOM.findDOMNode(this))
-        console.log(ReactDOM.findDOMNode(this).getBoundingClientRect())
         this.topPosition = 340
         document.addEventListener('scroll', this.onScroll)
     }
 
     onScroll() {
-        console.log(window.scrollY)
-        console.log(this.topPosition)
-        this.topPosition < window.scrollY + 20 ? this.setState({
+        this.topPosition < window.scrollY ? this.setState({
             isFloat: true
         }) : this.setState({
             isFloat: false
@@ -44,15 +43,16 @@ class Main extends PureComponent {
         return (
             <MenuContainer isFloat={this.state.isFloat} >
                 <ButtomMenuContainer>
-                    <MenuButton>모집합니다!</MenuButton>
-                    <MenuButton>나 어때?</MenuButton>
-                    <MenuButton>전광판</MenuButton>
-                    <MenuButton>우리는 합니다</MenuButton>
+                    {this.state.isFloat ? <PIKLogo /> : null}
+                    <MenuButton to="Recurit">모집합니다!</MenuButton>
+                    <MenuButton to="HowMe">나 어때?</MenuButton>
+                    <MenuButton to="Recurit">전광판</MenuButton>
+                    <MenuButton to="WeDo">우리는 합니다</MenuButton>
                     <MenuButton>자유게시판</MenuButton>
                 </ButtomMenuContainer>
                 <ButtomRightMenuContainer>
-                    <MenuButton>로그인</MenuButton>
-                    <MenuButton>회원가입</MenuButton>
+                    <MenuButton to="Login">로그인</MenuButton>
+                    <MenuButton to="Register">회원가입</MenuButton>
                 </ButtomRightMenuContainer>
             </MenuContainer>
         );

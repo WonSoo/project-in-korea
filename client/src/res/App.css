@@ -336,12 +336,12 @@ header {
 .color-tag-table {
     border: 2px solid black;
     box-sizing: border-box;
-    width: 246px;
+    width: 205px;
 }
 
 .color-tag-table tr td:nth-child(1) {
-    width: 124px;
-    min-width: 124px;
+    width: 101px;
+    min-width: 101px;
 }
 
 .color-tag-table tr:nth-child(3) td {
@@ -357,7 +357,7 @@ header {
 }
 
 .color-tag-selected {
-    width: 246px;
+    width: 205px;
     height: 26px;
     /* padding: 1px; */
     box-sizing: border-box;
@@ -434,7 +434,7 @@ header {
 
 
 
-label {
+/* label {
     width: 112px;
     display: inline-block;
     text-align: center;
@@ -445,7 +445,7 @@ input {
     width: calc(100% - 127px);
     height: 32px;
     box-sizing: border-box;
-}
+} */
 
 .input-group div {
     margin: 2.5px;
