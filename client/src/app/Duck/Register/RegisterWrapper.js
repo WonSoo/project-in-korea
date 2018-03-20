@@ -51,14 +51,14 @@ const BackgroundImg = styled.img`
 `
 
 const CardViewPort = styled.div`
-    width: 360px;
+    width: 300px;
     overflow: hidden;
     margin: 0 auto;
 `
 
 const CardContainer = styled.div`
     width: 1080px;
-    transform: ${props => `translateX(-${360 * props.cardIndex}px)`};
+    transform: ${props => `translateX(-${300 * props.cardIndex}px)`};
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 `
 
@@ -70,9 +70,9 @@ class RegisterWrapper extends PureComponent {
             name: "",
             email: "",
             password: "",
-            account_type:""
+            account_type: ""
         }
-        
+
         this.moveToNextCard = this.moveToNextCard.bind(this);
         this.onStateChange = this.onStateChange.bind(this);
         this.registerSubmit = this.registerSubmit.bind(this);
@@ -99,10 +99,30 @@ class RegisterWrapper extends PureComponent {
             password: this.state.password
         }).then(function (response) {
             console.log(response);
-          })
-          .catch(function (error) {
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    sendEmail = (email) => {
+        Axios.post("/register_verify", {
+            email: email
+        }).then((response) => {
+            this.moveToNextCard()
+        }).catch(function (error) {
             console.log(error);
-          });
+        });
+    }
+
+    sendCode = (verify_number) => {
+        Axios.post("/register_verify_check", {
+            verify_number: verify_number
+        }).then((response) => {
+            this.moveToNextCard()
+        }).catch(function (error) {
+            console.log(error);
+        });
     }
 
     render() {
@@ -126,7 +146,13 @@ class RegisterWrapper extends PureComponent {
                             <LoginHeader>이메일로 회원가입</LoginHeader>
                             <p style={{ marginBottom: "10px" }}>이메일인증을 완료해서 회원가입을 진행해 주세요.</p>
                             <LoginInput placeholder="이메일" value={this.state.email} name="email" onChange={this.onStateChange}></LoginInput>
-                            <LoginButton onClick={this.moveToNextCard}>인증하기</LoginButton>
+                            <LoginButton onClick={() => { this.sendEmail(this.state.email) }}>인증하기</LoginButton>
+                        </LoginCard>
+                        <LoginCard>
+                            <LoginHeader>이메일 인증</LoginHeader>
+                            <p style={{ marginBottom: "10px" }}>입력하신 이메일에서 6자리 숫자를 확인하고 입력해 주세요.</p>
+                            <LoginInput placeholder="000000" value={this.state.verify_number} name="verify_number" onChange={this.onStateChange}></LoginInput>
+                            <LoginButton onClick={() => { this.sendCode(this.state.verify_number) }}>인증하기</LoginButton>
                         </LoginCard>
                         <LoginCard>
                             <LoginHeader></LoginHeader>
