@@ -85,32 +85,28 @@ class RecuritWriteForm extends Component {
     let data = new FormData();
     data.append('image', file);
 
-    return Axios.post('https://api.imgur.com/3/image', data)
+    return Axios.post('/file', data)
       .then(function (response) {
         console.log(response);
-        return response
+        const result = {
+          data: {
+            link: "https://1ed8662c.ngrok.io/api/file/" + response.data["file_name"]
+          }
+        }
+        console.log(result)
+        return result
       }).catch(function (error) {
         console.log(error);
       });
+  }
 
-    // return new Promise(
-    //   (resolve, reject) => {
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'https://api.imgur.com/3/image');
-    //     xhr.setRequestHeader('Authorization', 'Client-ID XXXXX');
-    //     const data = new FormData();
-    //     data.append('image', file);
-    //     xhr.send(data);
-    //     xhr.addEventListener('load', () => {
-    //       const response = JSON.parse(xhr.responseText);
-    //       resolve(response);
-    //     });
-    //     xhr.addEventListener('error', () => {
-    //       const error = JSON.parse(xhr.responseText);
-    //       reject(error);
-    //     });
-    //   }
-    // );
+  onSubmit = () => {
+    Axios.post('/recurit', this.state)
+    .then(function (response) {
+      console.log(response)
+    }).catch(function (error) {
+      console.log(error);
+    });
   }
 
   render() {
@@ -135,7 +131,7 @@ class RecuritWriteForm extends Component {
             <Grid.Row>
               <Grid.Column width={5}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>프로젝트 기간 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "30%", margin: "0 10px" }}><RecuritDateInput name="project_name" value={this.state.project_name} onChange={this.onInputChange}/></div>
+                <div style={{ display: "inline-block", width: "30%", margin: "0 10px" }}><RecuritDateInput name="project_during" value={this.state.project_during} onChange={this.onInputChange}/></div>
                 <span>개월</span>
               </Grid.Column>
               <Grid.Column width={5}>
@@ -152,31 +148,31 @@ class RecuritWriteForm extends Component {
             <Grid.Row>
               <Grid.Column width={8}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>작업 형태 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritOnOffline name="work_type" onChange={this.onInputChange}/></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritOnOffline name="work_type" onChange={this.onInputChange} value={this.state.work_type}/></div>
               </Grid.Column>
 
               <Grid.Column width={8}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>급여 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritPayInput name="pay" onChange={this.onInputChange}/></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritPayInput name="pay" onChange={this.onInputChange} value={this.state.pay}/></div>
               </Grid.Column>
             </Grid.Row>
 
             <Grid.Row>
               <Grid.Column width={16}>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>모집 기간 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritDuring name="recurit_during" onChange={this.onInputChange}/></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritDuring name="recurit_during" onChange={this.onInputChange} value={this.state.recurit_during}/></div>
               </Grid.Column>
             </Grid.Row>
 
             <Grid.Row>
               <Grid.Column width={16} verticalAlign='bottom'>
                 <span><GridColumnHeader style={{ display: "inline-block" }}>필요 직군 : </GridColumnHeader></span>
-                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritJob name="job_group" onChange={this.onInputChange}/></div>
+                <div style={{ display: "inline-block", width: "60%", margin: "0 10px" }}><RecuritJob name="job_group" onChange={this.onInputChange} value={this.state.job_group}/></div>
               </Grid.Column>
             </Grid.Row>
           </Grid>
           <Grid.Row>
-            <Grid.Column>
+            <Grid.Column style={{marginBottom:"30px"}}>
               <Editor
                 editorStyle={{ border: "1px solid #F1F1F1", height: "300px" }}
                 wrapperClassName="demo-wrapper"
@@ -194,24 +190,14 @@ class RecuritWriteForm extends Component {
               />
             </Grid.Column>
           </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={14} stackable>
+            </Grid.Column>
+            <Grid.Column width={2} style={{float: "right", marginBottom:"30px"}}>
+                <Button>작성완료</Button>
+            </Grid.Column>
+          </Grid.Row>
         </Container>
-        {/* <RecuritTable>
-            <RecuritTableTr>
-              <td style={{ width: "80%" }}>
-                <RecuriteHeaderInput />
-              </td>
-              <td rowspan="2">
-                <RecuritPosterInput />
-              </td>
-            </RecuritTableTr>
-            <RecuritTableTr>
-              <td>
-                <RecuritPurposeInput />
-              </td>
-            </RecuritTableTr>
-          </RecuritTable>
-          <RecuritFirstContainer />
-          <RecuritSecondContainer /> */}
       </RecuritFormContainerStyle>
     );
   }

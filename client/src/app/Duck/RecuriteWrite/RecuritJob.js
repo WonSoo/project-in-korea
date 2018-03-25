@@ -10,10 +10,9 @@ const AddButton = styled.span`
     /* width: 40px;
     height: 40px;
     margin: 0 auto; */
-    color: white;
     font-size: 13pt;
     border-radius: 100px;
-    border: solid 1px white;
+    border: solid 1px black;
 `;
 
 export default class RecuritJob extends Component {
@@ -37,7 +36,14 @@ export default class RecuritJob extends Component {
         this.setState({
             jobs: newJobs
         })
+        this.props.onChange({
+            target: {
+                name: this.props.name,
+                value: newJobs
+            }
+        });
     }
+
 
     addJob() {
         this.setState({

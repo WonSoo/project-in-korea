@@ -30,7 +30,7 @@ const LoginInput = styled.input`
 `
 
 const LoginButton = styled.button`
-    margin-top: 20px;
+    margin-top: 5px;
     width: 100%;
     background: #F36E6F;
     color: white;
@@ -38,6 +38,8 @@ const LoginButton = styled.button`
     border: none;
     height: 40px;
     text-align: center;
+    font-size: 12pt;
+    border: solid 1px #e6e6e6;
 `
 
 const BackgroundImg = styled.img`
@@ -137,10 +139,13 @@ class RegisterWrapper extends PureComponent {
                     <CardContainer cardIndex={cardIndex}>
                         <LoginCard>
                             <LoginHeader>회원가입</LoginHeader>
-                            <p style={{ marginBottom: "10px" }}>회원가입 하시고 더 놀라운 프로젝트 인 코리아를 만나보세요!</p>
-                            <LoginButton onClick={this.moveToNextCard}>이메일로 회원가입</LoginButton>
+                            <p style={{ marginBottom: "10px" }}>더 놀라운 프인코를 만나보세요!</p>
+                            <LoginButton style={{background: "#262626"}} onClick={this.moveToNextCard}>이메일로 회원가입</LoginButton>
                             <MiddleLine />
-                            <SnsServiceContainer />
+                            <LoginButton style={{background: "#3b5998"}} onClick={this.moveToNextCard}>페이스북으로 회원가입</LoginButton>
+                            <LoginButton style={{background: "#df4d40"}} onClick={this.moveToNextCard}>구글로 회원가입</LoginButton>
+                            <LoginButton style={{background: "#00c63c"}} onClick={this.moveToNextCard}>네이버로 회원가입</LoginButton>
+                            <LoginButton style={{background: "#1da1f2"}} onClick={this.moveToNextCard}>트위터로 회원가입</LoginButton>
                         </LoginCard>
                         <LoginCard>
                             <LoginHeader>이메일로 회원가입</LoginHeader>
@@ -155,8 +160,8 @@ class RegisterWrapper extends PureComponent {
                             <LoginButton onClick={() => { this.sendCode(this.state.verify_number) }}>인증하기</LoginButton>
                         </LoginCard>
                         <LoginCard>
-                            <LoginHeader></LoginHeader>
-                            <p style={{ marginBottom: "10px" }}>추가정보를 입력하시고 회원가입을 완료하세요.</p>
+                            <LoginHeader>정보입력</LoginHeader>
+                            <p style={{ marginBottom: "10px" }}>소중한 정보를 입력해 주세요.</p>
                             <LoginInput placeholder="이름" name="name" value={this.state.name} onChange={this.onStateChange}></LoginInput>
                             <LoginInput placeholder="패스워드" name="password" onChange={this.onStateChange}></LoginInput>
                             <LoginInput placeholder="패스워드 확인"></LoginInput>

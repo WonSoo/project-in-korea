@@ -22,10 +22,16 @@ class ColorTagSelector extends Component {
 
     addColor(color) {
         if (this.state.colorList.length < 5) {
-            this.props.onChange([...this.state.colorList, color]);
             this.setState({
                 colorList: [...this.state.colorList, color]
             });
+            this.props.onChange({
+                target: {
+                    name: this.props.name,
+                    value: [...this.state.colorList, color]
+                }
+            });
+
         }
     };
 
