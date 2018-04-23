@@ -1,4 +1,4 @@
-package kr.pik.core.auth;
+package kr.pik.auth;
 
 public interface AuthManager {
 	public Account login();

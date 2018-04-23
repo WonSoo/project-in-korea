@@ -1,4 +1,4 @@
-package kr.pik.core.auth;
+package kr.pik.auth;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -32,7 +32,7 @@ public class RestAPIService {
 	        addCookieHandler();
 	        addSessionHandler();
 	        
-	        WebVerticle postVerticle = new PostVerticle();
+	        WebVerticle postVerticle = new RecruitVerticle();
 	        vertx.deployVerticle(postVerticle);
 	        
 	        WebVerticle loginVerticle = new LoginVerticle();

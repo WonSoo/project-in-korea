@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package kr.pik.core.auth;
+package kr.pik.auth;
 
 public class Account {
 	private AccountType accountType;

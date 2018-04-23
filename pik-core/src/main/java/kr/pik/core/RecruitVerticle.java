@@ -15,13 +15,19 @@ import io.vertx.ext.web.*;
 import java.util.Date;
 import java.util.List;
 
-import kr.pik.core.auth.Account;
+import kr.pik.auth.Account;
+import kr.pik.sql.FactorySQLDialect;
+import kr.pik.sql.FactorySQLDialect.Dialect;
+import kr.pik.sql.SQLDialect;
 import kr.pik.utils.database.Database;
 import org.bson.Document;
 
-public class PostVerticle extends WebVerticle {
+public class RecruitVerticle extends WebVerticle {
+	private SQLDialect recruitDialect;
 
     public void start() {
+    	recruitDialect = FactorySQLDialect.createSQLDialect(Dialect.Recruit);
+    	
         router.get("/api/recruit/getCategoies").handler(this::getCategories);
         router.get("/api/recruit/getKeyword").handler(this::getKeyword);
         router.get("/api/recruit").handler(this::getAmount);
@@ -33,10 +39,9 @@ public class PostVerticle extends WebVerticle {
     }
     
     private void getCategories(RoutingContext routingContext) {
-    	Document searchQuery = new Document();
+    	MongoCursor<Document> cursor = recruitDialect.find();
     	
     	String categories = null;
-    	MongoCursor<Document> cursor = database.getCollection("Recruit").find(searchQuery).iterator();
         while(cursor.hasNext())
         	categories = cursor.next().toJson();
         
@@ -49,36 +54,31 @@ public class PostVerticle extends WebVerticle {
         String bigCategory = routingContext.request().getParam("big_category");
         List<String> colorTags = routingContext.request().params().getAll("colortags[]");
 
-        System.out.println("project_name: " + projectName);
-        System.out.println("big_category: " + bigCategory);
-        System.out.println("colortags: " + colorTags);
-
         Document searchQuery = new Document();
         searchQuery.put("project_name", projectName);
         searchQuery.put("big_category", bigCategory);
         searchQuery.put("colortags", colorTags);
-        JsonArray response = database.findKeyword("grams" , searchQuery);
-        MongoCursor<Document> cursor = database.getCollection("grams").find().iterator();
-        JsonArray jsonArray = new JsonArray();
+        
+        MongoCursor<Document> cursor = recruitDialect.find(searchQuery);
+        JsonArray categories= new JsonArray();
         while(cursor.hasNext())
-            jsonArray.add(cursor.next().toJson());
+        	categories.add(cursor.next().toJson());
 
-        System.out.println("response: " + response);
-        System.out.println("jsonArray: " + jsonArray);
-        routingContext.response().end(response.toString());
+        routingContext.response().end(categories.toString());
     }
 
     private void getAmount(RoutingContext routingContext) {
         int amount = Integer.parseInt(routingContext.pathParam("amount"));
         HttpServerResponse response = routingContext.response();
-        response.setChunked(true);
+        MongoCursor<Document> cursor = recruitDialect.find(null, 0, amount);
         JsonArray jsonArray = database.findMany("grams", amount);
 
+        response.setChunked(true);
         if (jsonArray.isEmpty()) {
             response.setStatusCode(204);
             response.end();
         } else {
-            response.putHeader("content-type", "application/json; charset=utf-8").end(jsonArray.toString());
+            response.end(jsonArray.toString());
         }
     }
 

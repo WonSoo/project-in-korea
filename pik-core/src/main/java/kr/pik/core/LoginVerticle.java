@@ -24,12 +24,12 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import kr.pik.auth.Account;
+import kr.pik.auth.AuthManager;
+import kr.pik.auth.FacebookAuth;
+import kr.pik.auth.PIKAuth;
 import kr.pik.utils.database.Database;
 import kr.pik.utils.database.SecureConfig;
-import kr.pik.core.auth.Account;
-import kr.pik.core.auth.AuthManager;
-import kr.pik.core.auth.FacebookAuth;
-import kr.pik.core.auth.PIKAuth;
 
 import org.bson.Document;
 
