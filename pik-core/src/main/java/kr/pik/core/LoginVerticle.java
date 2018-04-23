@@ -12,23 +12,19 @@ import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.MailMessage;
 import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.Cookie;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
 
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
 
 import kr.pik.auth.Account;
 import kr.pik.auth.AuthManager;
 import kr.pik.auth.FacebookAuth;
 import kr.pik.auth.PIKAuth;
-import kr.pik.utils.database.Database;
 import kr.pik.utils.database.SecureConfig;
 
 import org.bson.Document;
@@ -37,21 +33,21 @@ public class LoginVerticle extends WebVerticle {
 	private MailClient mailClient;
 	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
 			Pattern.CASE_INSENSITIVE);
-	private SecureConfig SecureConfig;
+	private SecureConfig secureConfig;
 
     public LoginVerticle() {
     }
 
     private void initialize() {
-        SecureConfig = SecureConfig.getInstance();
+        secureConfig = SecureConfig.getInstance();
         
 		MailConfig config = new MailConfig();
 		
-		config.setHostname(SecureConfig.getString("Mail.host"));
-		config.setPort(SecureConfig.getInt("Mail.port"));
+		config.setHostname(secureConfig.getString("Mail.host"));
+		config.setPort(secureConfig.getInt("Mail.port"));
 		config.setStarttls(StartTLSOptions.REQUIRED);
-		config.setUsername(SecureConfig.getString("Mail.username"));
-		config.setPassword(SecureConfig.getString("Mail.password"));
+		config.setUsername(secureConfig.getString("Mail.username"));
+		config.setPassword(secureConfig.getString("Mail.password"));
 		mailClient = MailClient.createNonShared(vertx, config);
     }
 
@@ -251,15 +247,5 @@ public class LoginVerticle extends WebVerticle {
         	response.end("login failed.");
         	response.close();
         }
-    }
-
-    private boolean checkRegistered(String id) {
-        return database.isExist("accounts", "id", id);
-    }
-
-    private void createAccount(String id, String name) {
-        Document account = (new Document("id", id)).append("name", name);
-        database.insert("accounts", account);
-        System.out.println("account created: " + name);
     }
 }

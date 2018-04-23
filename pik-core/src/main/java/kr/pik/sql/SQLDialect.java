@@ -1,5 +1,7 @@
 package kr.pik.sql;
 
+import java.util.Iterator;
+
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
@@ -11,12 +13,39 @@ import kr.pik.utils.database.Database;
 
 public class SQLDialect {
 	private MongoCollection<Document> collection;
+	private MongoCollection<Document> countCollection;
 	
 	public SQLDialect(String collectionName) {
 		collection = Database.getInstance().getCollection(collectionName);
+		countCollection = Database.getInstance().getCollection("counters");
 	}
 	
+    public Object getNextSequence() {
+        Document searchQuery = new Document("_id", collection.getNamespace());
+        Document increase = new Document("seq", Integer.valueOf(1));
+        Document updateQuery = new Document("$inc", increase);
+        Document result = (Document)countCollection.findOneAndUpdate(searchQuery, updateQuery);
+        return result.get("seq");
+    }
+
+    private void createCountCollection() {
+        Document insertDoc = new Document();
+        insertDoc.append("_id", collection.getNamespace());
+        insertDoc.append("seq", Integer.valueOf(0));
+        collection.insertOne(insertDoc);
+    }
+    
+    private void updateId(Document doc) {
+        Document searchCounters = (new Document()).append("_id", collection);
+        if (Database.getInstance().getCollection("counters").count(searchCounters) == 0L) {
+            createCountCollection();
+        }
+
+        doc.append("_id", this.getNextSequence());
+    }
+	
 	public void insert(Document document) {
+		updateId(document);
 		collection.insertOne(document);
 	}
 	
@@ -30,17 +59,17 @@ public class SQLDialect {
 		System.out.println(result);
 	}
 	
-	public MongoCursor<Document> find() {
+	public Iterator<Document> find() {
 		MongoCursor<Document> iterator = collection.find().iterator();
 		return iterator;
 	}
 	
-	public MongoCursor<Document> find(Document searchKey) {
+	public Iterator<Document> find(Document searchKey) {
 		MongoCursor<Document> iterator = collection.find(searchKey).iterator();
 		return iterator;
 	}
 	
-	public MongoCursor<Document> find(Document searchKey, int lastIndex, int limit) {
+	public Iterator<Document> find(Document searchKey, int lastIndex, int limit) {
 		MongoCursor<Document> iterator = collection.find(searchKey).skip(lastIndex).limit(limit).iterator();
 		return iterator;
 	}
