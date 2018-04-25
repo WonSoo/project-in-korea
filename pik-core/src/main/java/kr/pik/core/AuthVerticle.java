@@ -7,29 +7,19 @@ package kr.pik.core;
 
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mail.MailClient;
-import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.MailMessage;
-import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
-
-import java.net.HttpURLConnection;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-
 import kr.pik.auth.Account;
 import kr.pik.auth.AuthManager;
 import kr.pik.auth.FacebookAuth;
 import kr.pik.auth.PIKAuth;
 import kr.pik.content.Status;
 import kr.pik.mail.MailSender;
-import kr.pik.utils.database.SecureConfig;
-
-import org.bson.Document;
 
 public class AuthVerticle extends WebVerticle {
 	private static final String EMAIL_VERIFY_KEY = "email_verify_number";

@@ -6,10 +6,8 @@
 package kr.pik.content;
 
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Post {
-    private static final AtomicInteger COUNTER = new AtomicInteger();
     private int id;
     private String writer;
     private String title;

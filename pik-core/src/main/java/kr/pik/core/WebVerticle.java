@@ -1,19 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package kr.pik.core;
-
-import org.bson.Document;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.*;
 import kr.pik.auth.Account;
-import kr.pik.content.Status;
 import kr.pik.utils.database.Database;
 
 public abstract class WebVerticle extends AbstractVerticle {

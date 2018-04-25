@@ -1,13 +1,9 @@
 package kr.pik.core;
 
-import java.util.Date;
 import java.util.Iterator;
-
 import org.bson.Document;
-
 import io.vertx.ext.web.RoutingContext;
 import kr.pik.auth.Account;
-import kr.pik.auth.AccountType;
 import kr.pik.content.Status;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
@@ -55,7 +51,7 @@ public class ProxyVerticle extends WebVerticle{
     		searchKey.put("_id", recruitId);
 			searchKey.put("writer", account.getEmail());
 			
-    		Iterator iterator = recruitDialect.find(searchKey);
+    		Iterator<Document> iterator = recruitDialect.find(searchKey);
     		
     		if(!iterator.hasNext()) {
             	context.response().end(Status.PERMISSION_DENIED.getJsonMessage());

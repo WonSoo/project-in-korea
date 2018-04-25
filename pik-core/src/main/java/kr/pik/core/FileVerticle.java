@@ -25,7 +25,7 @@ public class FileVerticle extends WebVerticle {
 	}
 
 	private void uploadFile(RoutingContext routingContext) {
-		Iterator fileIterator = routingContext.fileUploads().iterator();
+		Iterator<FileUpload> fileIterator = routingContext.fileUploads().iterator();
 		Document responseMessage = new Document();
 		Document files = new Document();
 		while (fileIterator.hasNext()) {

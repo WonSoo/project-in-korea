@@ -1,12 +1,8 @@
 package kr.pik.mail;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 import io.vertx.ext.mail.MailClient;
 import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.MailMessage;
-import io.vertx.ext.mail.MailResult;
 import io.vertx.ext.mail.StartTLSOptions;
 import kr.pik.core.RestAPIService;
 import kr.pik.utils.database.SecureConfig;

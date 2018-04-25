@@ -1,18 +1,6 @@
 package kr.pik.auth;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-
 import org.bson.Document;
-import org.bson.conversions.Bson;
-
-import com.google.gson.Gson;
-
-import io.vertx.ext.web.Cookie;
-import io.vertx.ext.web.Session;
 import kr.pik.content.Status;
 import kr.pik.utils.database.Database;
 
