@@ -38,7 +38,7 @@ public class RestAPIService {
 	        WebVerticle postVerticle = new RecruitVerticle();
 	        vertx.deployVerticle(postVerticle);
 	        
-	        WebVerticle loginVerticle = new LoginVerticle();
+	        WebVerticle loginVerticle = new AuthVerticle();
 	        vertx.deployVerticle(loginVerticle);
 	        
 	        WebVerticle fileVerticle = new FileVerticle();

@@ -5,19 +5,11 @@
 
 package kr.pik.core;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
-import io.vertx.core.MultiMap;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.*;
+import kr.pik.content.Status;
 
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
-import kr.pik.utils.database.Database;
 import org.bson.Document;
 
 public class FileVerticle extends WebVerticle {
@@ -34,14 +26,15 @@ public class FileVerticle extends WebVerticle {
 
 	private void uploadFile(RoutingContext routingContext) {
 		Iterator fileIterator = routingContext.fileUploads().iterator();
-		JsonObject responseMessage = new JsonObject();
-		JsonObject files = new JsonObject();
+		Document responseMessage = new Document();
+		Document files = new Document();
 		while (fileIterator.hasNext()) {
 			FileUpload fileUpload = (FileUpload) fileIterator.next();
 			files.put(Integer.toString(files.size()), fileUpload.uploadedFileName().replace("file-uploads\\", ""));
 		}
 		responseMessage.put("files", files);
-		routingContext.response().setStatusCode(200);
+		
+		responseMessage = Status.FILE_SAVE_SUCCESS.addErrorMessage(responseMessage);
 		routingContext.response().end(responseMessage.toString());
 	}
 }

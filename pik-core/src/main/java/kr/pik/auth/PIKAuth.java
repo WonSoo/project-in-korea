@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import io.vertx.ext.web.Cookie;
 import io.vertx.ext.web.Session;
+import kr.pik.content.Status;
 import kr.pik.utils.database.Database;
 
 public class PIKAuth implements AuthManager {
@@ -22,12 +23,19 @@ public class PIKAuth implements AuthManager {
 	String email;
 	String password;
 	String repassword;
+	
+	public PIKAuth(String email, String password) {
+		this.email = email;
+		this.password = password;
 
-	public PIKAuth(String name, String email, String password, String repassword) {
-		this.name = name;
+		this.database = Database.getInstance();
+	}
+
+	public PIKAuth(String email, String password, String repassword, String name) {
 		this.email = email;
 		this.password = password;
 		this.repassword = repassword;
+		this.name = name;
 
 		this.database = Database.getInstance();
 	}
@@ -43,19 +51,26 @@ public class PIKAuth implements AuthManager {
 
 	public Account login() {
 		Document result = findUserByEmail();
+		
+		Account account = null;
 		if (result.get("password").equals(password)) {
-			Account account = new Account(AccountType.PIK, result.getString("name"), null, result.getString("email"));
+			account = new Account(AccountType.PIK, result.getString("name"), result.getString("email"));
 			return account;
+		} else {
+			account = new Account(Status.LOGIN_FAIL_INVALID_PASSWORD);
 		}
 		return null;
 	}
 
-	public boolean register() {	
+	public Status register() {	
 		Document result = findUserByEmail();
 		if(result != null) {
-			return false;
+			return Status.REGISTER_FAIL_EXIST_USER;
 		}
 		
+		if(!password.equals(repassword)) {
+			return Status.REGISTER_FAIL_INVALID_REPASSWORD;
+		}
 		Document inputQuery = new Document();
 		inputQuery.put("accountType", "pik");
 		inputQuery.put("name", name);
@@ -63,7 +78,7 @@ public class PIKAuth implements AuthManager {
 		inputQuery.put("password", password);
 		database.getCollection("users").insertOne(inputQuery);
 
-		return true;
+		return Status.REGISTER_SUCCESS;
 	}
 
 	public boolean isUserExist() {

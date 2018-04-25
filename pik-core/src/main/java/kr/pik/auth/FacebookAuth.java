@@ -10,6 +10,7 @@ import org.bson.Document;
 
 import com.google.gson.Gson;
 
+import kr.pik.content.Status;
 import kr.pik.utils.database.Database;
 
 public class FacebookAuth implements AuthManager{
@@ -44,25 +45,31 @@ public class FacebookAuth implements AuthManager{
 	public Account login()
 	{
 		Account account = findUserByAccessToken();
-		if(account != null) {
-			return account;
-		} else {
-			if(register()) {
-				return findUserByAccessToken();
+		if(account == null) {
+			if(register() == Status.REGISTER_SUCCESS) {
+				account = findUserByAccessToken();
+				if(account != null) {
+					account.setStatus(Status.LOGIN_SUCCESS);
+				} else {
+					account = new Account(Status.LOGIN_FAIL_UNKNOWN_USER);
+				}
+				
+				return account;
 			}
 		}
-		return null;
+		account.setStatus(Status.LOGIN_SUCCESS);
+		return account;
 	}
 	
-	public boolean register()
+	public Status register()
 	{
 		if(isUserExist() == false) {
 			Document inputQuery = new Document();
 			inputQuery.put("accountType", "facebook");
 			inputQuery.put("id", account.getId());
-			return true;
+			return Status.REGISTER_FAIL_EXIST_USER;
 		}
-		return false;
+		return Status.REGISTER_SUCCESS;
 	}
 	
 	public boolean isUserExist()

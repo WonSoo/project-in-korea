@@ -8,6 +8,7 @@ import org.bson.Document;
 import io.vertx.ext.web.RoutingContext;
 import kr.pik.auth.Account;
 import kr.pik.auth.AccountType;
+import kr.pik.content.Status;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
 import kr.pik.sql.SQLDialect;
@@ -43,9 +44,7 @@ public class ProxyVerticle extends WebVerticle{
     	Account account = checkUnauthAccess(context);
     	
     	if(account == null) {
-        	context.response().setStatusCode(400);
-        	context.response().setStatusMessage("please relogin");
-        	context.response().end();
+        	context.response().end(Status.PERMISSION_DENIED_AUTH_NEED.getJsonMessage());
         	return;
     	}
     	
@@ -59,9 +58,7 @@ public class ProxyVerticle extends WebVerticle{
     		Iterator iterator = recruitDialect.find(searchKey);
     		
     		if(!iterator.hasNext()) {
-            	context.response().setStatusCode(400);
-            	context.response().setStatusMessage("that recruit is not yours.");
-            	context.response().end();
+            	context.response().end(Status.PERMISSION_DENIED.getJsonMessage());
             	return;
     		}
     	}

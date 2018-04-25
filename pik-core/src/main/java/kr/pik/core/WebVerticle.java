@@ -5,16 +5,20 @@
 
 package kr.pik.core;
 
+import org.bson.Document;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.*;
 import kr.pik.auth.Account;
+import kr.pik.content.Status;
 import kr.pik.utils.database.Database;
 
 public abstract class WebVerticle extends AbstractVerticle {
 	public static final String LOGIN_COOKIE = "LOGIN_SESSION";
+	public static final String ERROR_KEY = "err";
 	
     protected static Vertx vertx;
     protected static Router router;
@@ -34,7 +38,7 @@ public abstract class WebVerticle extends AbstractVerticle {
 		}
 		return account;
 	}
-
+	
     public void start() throws Exception {
     }
 

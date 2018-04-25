@@ -5,26 +5,31 @@
 
 package kr.pik.auth;
 
+import kr.pik.content.Status;
+
 public class Account {
+	private Status status;
+	
 	private AccountType accountType;
 	
     private String name;
     private String id;
     private String email;
-
-    public Account(AccountType accoutType, String name, String id, String email) {
+    
+    public Account(AccountType accountType, String name, String email) {
     	this.accountType = accountType;
     	this.name = name;
-    	this.id = id;
     	this.email = email;
     }
     
-    
-
-    public AccountType getAccountType() {
-		return accountType;
+    public Account(Status status) {
+    	this.status = status;
 	}
 
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
 
 
 	public void setAccountType(AccountType accountType) {
@@ -32,24 +37,22 @@ public class Account {
 	}
 
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 
 	public void setId(String id) {
 		this.id = id;
 	}
 
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	public String getName() {
         return this.name;
@@ -62,4 +65,8 @@ public class Account {
     public String getEmail() {
         return this.email;
     }
+
+	public Status getStatus() {
+		return status;
+	}
 }
