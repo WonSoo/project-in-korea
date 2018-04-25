@@ -18,12 +18,12 @@ public class RestAPIService {
 	}
 	
 	private static class RestAPIWrapper {
-		private static RestAPIService INSTANCE = new RestAPIService();
+		static RestAPIService INSTANCE = new RestAPIService();
 	}
 	
 	public void start() {
-		vertx = Vertx.vertx();
-		router = Router.router(vertx);
+		vertx = VertxMain.getVertx();
+		router = VertxMain.getRouter();
 
         try {
         	enableCorsSupport();

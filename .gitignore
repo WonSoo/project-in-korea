@@ -9,3 +9,6 @@ build/
 pik-core/src/main/resources/webroot/
 *.class
 /bin/
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/ProjectSettings.json
