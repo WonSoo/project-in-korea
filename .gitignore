@@ -5,8 +5,10 @@ build/
 /.idea/
 /logs/
 /out/
+/output/
 *.class
 pik-core/src/main/resources/webroot/
+pik-utils/src/main/resources/conf/SecureConfig.xml
 *.class
 /bin/
 .vs/slnx.sqlite
