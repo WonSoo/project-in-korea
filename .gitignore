@@ -14,8 +14,4 @@ pik-utils/src/main/resources/conf/SecureConfig.xml
 /bin/
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
-<<<<<<< HEAD
 .vs/ProjectSettings.json
-=======
-.vs/ProjectSettings.json
->>>>>>> dc9705a03b9a7d8583c695d70e563079b868855a
