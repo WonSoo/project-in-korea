@@ -9,7 +9,7 @@ build/
 *.class
 pik-core/src/main/resources/webroot/
 pik-core/file-uploads/
-#pik-utils/src/main/resources/conf/SecureConfig.xml
+pik-utils/src/main/resources/conf/SecureConfig.xml
 *.class
 /bin/
 .vs/slnx.sqlite
