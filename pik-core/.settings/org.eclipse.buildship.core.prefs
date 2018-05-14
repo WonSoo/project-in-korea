@@ -1,4 +1,4 @@
-#Mon May 14 22:28:20 KST 2018
+#Mon May 14 22:44:01 KST 2018
 connection.arguments=
 connection.jvm.arguments=
 build.commands=org.eclipse.jdt.core.javabuilder
@@ -7,5 +7,5 @@ natures=org.eclipse.jdt.core.javanature
 eclipse.preferences.version=1
 connection.java.home=null
 derived.resources=.gradle,build
-project.path=\:pik-core
 connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
+project.path=\:pik-core
