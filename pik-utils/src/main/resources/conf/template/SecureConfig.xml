@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
-<!-- Copy this files to parent directory. -->
+<!-- This is a template for SecureConfig. Copy this files to parent directory. And fill data to it. -->
 
 <configuration>
     <database>
