@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration>
+    <database>
+        <id>your-id</id>
+        <password>your-password</password>
+    </database>
+    <Mail>
+        <host>your-host</host>
+        <port>your-port</port>
+        <username>your-id</username>
+        <password>your-password</password>
+    </Mail>
+</configuration>
