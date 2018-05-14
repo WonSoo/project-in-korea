@@ -12,16 +12,18 @@ import com.mongodb.client.result.UpdateResult;
 import kr.pik.utils.database.Database;
 
 public class SQLDialect {
+	private String collectionName;
 	private MongoCollection<Document> collection;
 	private MongoCollection<Document> countCollection;
 	
 	public SQLDialect(String collectionName) {
+		this.collectionName = collectionName;
 		collection = Database.getInstance().getCollection(collectionName);
-		countCollection = Database.getInstance().getCollection("counters");
+		countCollection = Database.getInstance().getCollection("Counters");
 	}
 	
     public Object getNextSequence() {
-        Document searchQuery = new Document("_id", collection.getNamespace());
+        Document searchQuery = new Document("_id", collectionName);
         Document increase = new Document("seq", Integer.valueOf(1));
         Document updateQuery = new Document("$inc", increase);
         Document result = (Document)countCollection.findOneAndUpdate(searchQuery, updateQuery);
@@ -30,14 +32,14 @@ public class SQLDialect {
 
     private void createCountCollection() {
         Document insertDoc = new Document();
-        insertDoc.append("_id", collection.getNamespace());
+        insertDoc.append("_id", collectionName);
         insertDoc.append("seq", Integer.valueOf(0));
-        collection.insertOne(insertDoc);
+        countCollection.insertOne(insertDoc);
     }
     
     private void updateId(Document doc) {
-        Document searchCounters = (new Document()).append("_id", collection);
-        if (Database.getInstance().getCollection("counters").count(searchCounters) == 0L) {
+        Document searchCounters = (new Document()).append("_id", collectionName);
+        if (countCollection.count(searchCounters) == 0L) {
             createCountCollection();
         }
 
