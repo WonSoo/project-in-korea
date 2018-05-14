@@ -16,7 +16,8 @@ public class Account {
     private String id;
     private String email;
     
-    public Account(AccountType accountType, String name, String email) {
+    public Account(Status status, AccountType accountType, String name, String email) {
+    	this.status = status;
     	this.accountType = accountType;
     	this.name = name;
     	this.email = email;

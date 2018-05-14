@@ -41,13 +41,13 @@ public class PIKAuth implements AuthManager {
 		Document result = findUserByEmail();
 		
 		Account account = null;
-		if (result.get("password").equals(password)) {
-			account = new Account(AccountType.PIK, result.getString("name"), result.getString("email"));
+		if (result != null && result.get("password").equals(password)) {
+			account = new Account(Status.LOGIN_SUCCESS, AccountType.PIK, result.getString("name"), result.getString("email"));
 			return account;
 		} else {
 			account = new Account(Status.LOGIN_FAIL_INVALID_PASSWORD);
 		}
-		return null;
+		return account;
 	}
 
 	public Status register() {	

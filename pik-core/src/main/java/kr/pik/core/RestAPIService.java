@@ -32,6 +32,9 @@ public class RestAPIService {
 	        addCookieHandler();
 	        addSessionHandler();
 	        
+	        WebVerticle testHandler = new TestHandler();
+	        vertx.deployVerticle(testHandler);
+	        
 	        WebVerticle proxyVerticle = new ProxyVerticle();
 	        vertx.deployVerticle(proxyVerticle);
 	        

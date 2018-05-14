@@ -1,6 +1,11 @@
 package kr.pik.core;
 
+import org.bson.Document;
+
 import io.vertx.ext.web.*;
+import kr.pik.sql.FactorySQLDialect;
+import kr.pik.sql.FactorySQLDialect.Dialect;
+import kr.pik.sql.SQLDialect;
 
 public class TestHandler extends WebVerticle {
 
@@ -8,6 +13,14 @@ public class TestHandler extends WebVerticle {
 		router.get("/test/addCookie").handler(this::addCookie);
 		router.get("/test/addSession").handler(this::addSession);
 		router.get("/test/getSession").handler(this::getSession);
+		router.get("/test/dbTest").handler(this::testDB);
+	}
+	
+	private void testDB(RoutingContext routingContext) {
+		System.out.println("testDB called");
+		SQLDialect dialect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
+		dialect.insert(new Document("TEST", "1"));
+		routingContext.response().end("TEST");
 	}
 
 	private void addCookie(RoutingContext routingContext) {
