@@ -4,6 +4,12 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CookieHandler;
+import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.sstore.LocalSessionStore;
 import kr.pik.auth.Account;
 import kr.pik.utils.database.Database;
 
@@ -29,11 +35,4 @@ public abstract class WebVerticle extends AbstractVerticle {
 		}
 		return account;
 	}
-	
-    public void start() throws Exception {
-    }
-
-    public void stop() throws Exception {
-        System.out.println("BasicVerticle stopped");
-    }
 }

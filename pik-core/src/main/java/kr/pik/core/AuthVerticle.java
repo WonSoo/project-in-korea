@@ -23,16 +23,17 @@ import kr.pik.mail.MailSender;
 
 public class AuthVerticle extends WebVerticle {
 	private static final String EMAIL_VERIFY_KEY = "email_verify_number";
-	private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
-			Pattern.CASE_INSENSITIVE);
+	private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern
+			.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    public void start() {
-        router.post("/api/login").handler(this::requestLogin);
-        router.post("/api/register").handler(this::requestRegister);
-        router.post("/api/register_verify").handler(this::registerVerify);
-        router.post("/api/register_verify_check").handler(this::registerVerifyCheck);
-    }
-    
+	@Override
+	public void start() throws Exception {
+		router.post("/api/login").handler(this::requestLogin);
+		router.post("/api/register").handler(this::requestRegister);
+		router.post("/api/register_verify").handler(this::registerVerify);
+		router.post("/api/register_verify_check").handler(this::registerVerifyCheck);
+	}
+
 	public static boolean validate(String emailStr) {
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
 		return matcher.find();
@@ -44,18 +45,19 @@ public class AuthVerticle extends WebVerticle {
 
 		return Integer.toString(random);
 	}
-	
+
 	private void registerVerifyCheck(RoutingContext routingContext) {
 		HttpServerResponse response = routingContext.response();
 		JsonObject receivedMessage = routingContext.getBodyAsJson();
 		String verifyNumber = receivedMessage.getString("verify_number");
-		
+
 		Session session = routingContext.session();
-		if(verifyNumber.equals(session.get(EMAIL_VERIFY_KEY))) {
+		if (verifyNumber.equals(session.get(EMAIL_VERIFY_KEY))) {
 			response.end(Status.EMAIL_VERIFY_CHECK_SUCCESS.getJsonMessage());
 			session.put("verified", true);
 			return;
-		};
+		}
+		;
 		response.end(Status.EMAIL_VERIFY_CHECK_FAIL.getJsonMessage());
 	}
 
@@ -68,7 +70,7 @@ public class AuthVerticle extends WebVerticle {
 			response.end(Status.EMAIL_VERIFY_FAIL_INVALID_EMAIL_FORMAT.getJsonMessage());
 			return;
 		}
-		
+
 		String randomNumber = randomNumber();
 		sendMail(email, randomNumber);
 		routingContext.session().put(EMAIL_VERIFY_KEY, randomNumber);
@@ -82,68 +84,66 @@ public class AuthVerticle extends WebVerticle {
 		message.setSubject("프로젝트 인 코리아 회원가입 인증번호 입니다.");
 		message.setText("프로젝트 인 코리아 회원가입 인증번호 입니다.");
 		message.setHtml("회원가입 인증번호는 " + randomNumber + " 입니다.");
-		
+
 		MailSender.getInstance().sendMail(message);
 	}
 
-    private void requestRegister(RoutingContext routingContext) {
-        HttpServerResponse response = routingContext.response();
-        JsonObject json = routingContext.getBodyAsJson();
+	private void requestRegister(RoutingContext routingContext) {
+		HttpServerResponse response = routingContext.response();
+		JsonObject json = routingContext.getBodyAsJson();
 
-        AuthManager authManager = null;
+		AuthManager authManager = null;
 		String type = json.getString("account_type");
-        if(type.equals("pik")) {
+		if (type.equals("pik")) {
 			boolean isVerified = (boolean) routingContext.session().get("verified");
-			
-			if(!isVerified) {
+
+			if (!isVerified) {
 				response.end(Status.REGISTER_FAIL_EMAIL_NOT_VERIFIED.getJsonMessage());
 				response.close();
 				return;
 			}
-			
-			authManager = new PIKAuth(json.getString("name"), json.getString("email"), 
-					json.getString("password"), json.getString("repassword"));
+
+			authManager = new PIKAuth(json.getString("name"), json.getString("email"), json.getString("password"),
+					json.getString("repassword"));
 
 			Status register_result = authManager.register();
-            response.end(register_result.getJsonMessage());
-    		return;
-        } else{
-        	response.end(Status.LOGIN_FAIL_UNKNOWN_ACCOUNT_TYPE.getJsonMessage());
-        }
-    }
-    
-    private void addLoginCookie(RoutingContext routingContext, Account account) {
-		String accountKey = Integer.toString(account.hashCode());
-        routingContext.session().put(accountKey, account);
-        Cookie cookie = Cookie.cookie(LOGIN_COOKIE, accountKey);
-        cookie.setPath("/");
-        routingContext.addCookie(cookie);
-    }
+			response.end(register_result.getJsonMessage());
+			return;
+		} else {
+			response.end(Status.LOGIN_FAIL_UNKNOWN_ACCOUNT_TYPE.getJsonMessage());
+		}
+	}
 
-    private void requestLogin(RoutingContext routingContext) {
-        HttpServerResponse response = routingContext.response();
-        JsonObject json = routingContext.getBodyAsJson();
+	private void addLoginCookie(RoutingContext routingContext, Account account) {
+		String accountKey = Integer.toString(account.hashCode());
+		routingContext.session().put(accountKey, account);
+		Cookie cookie = Cookie.cookie(LOGIN_COOKIE, accountKey);
+		cookie.setPath("/");
+		routingContext.addCookie(cookie);
+	}
+
+	private void requestLogin(RoutingContext routingContext) {
+		HttpServerResponse response = routingContext.response();
+		JsonObject json = routingContext.getBodyAsJson();
 		AuthManager authManager = null;
-		
+
 		Account account = null;
 		String type = json.getString("account_type");
-        if(type.equals("pik")) {
-        	authManager = new PIKAuth(json.getString("email"), json.getString("password"));
-        	account = authManager.login();
-        }
-        else if(type.equals("facebook"))
-        {
-        	authManager = new FacebookAuth(json.getString("accessToken"));
-        	account = authManager.login();
-        } else{
-        	response.end(Status.LOGIN_FAIL_UNKNOWN_ACCOUNT_TYPE.getJsonMessage());
-        	return;
-        }
+		if (type.equals("pik")) {
+			authManager = new PIKAuth(json.getString("email"), json.getString("password"));
+			account = authManager.login();
+		} else if (type.equals("facebook")) {
+			authManager = new FacebookAuth(json.getString("accessToken"));
+			account = authManager.login();
+		} else {
+			response.end(Status.LOGIN_FAIL_UNKNOWN_ACCOUNT_TYPE.getJsonMessage());
+			return;
+		}
 
-    	if(account.getStatus().isSuccess())
-    		addLoginCookie(routingContext, account);
+		if (account.getStatus().isSuccess())
+			addLoginCookie(routingContext, account);
 
-    	response.end(account.getStatus().getJsonMessage());
-    	return;
-    }
+		response.end(account.getStatus().getJsonMessage());
+		return;
+	}
 }

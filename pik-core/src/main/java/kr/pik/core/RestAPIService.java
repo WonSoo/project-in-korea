@@ -10,87 +10,87 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
 public class RestAPIService {
-	private static Router router = null;
 	private static Vertx vertx = null;
-	
+	private static Router router = null;
+
 	private RestAPIService() {
-		
+
 	}
-	
+
 	private static class RestAPIWrapper {
 		static RestAPIService INSTANCE = new RestAPIService();
 	}
-	
-	public void start() {
-		vertx = VertxMain.getVertx();
-		router = VertxMain.getRouter();
 
-        try {
-        	enableCorsSupport();
-        	
-	        addBodyHnadler();
-	        addCookieHandler();
-	        addSessionHandler();
-	        
-	        WebVerticle testHandler = new TestHandler();
-	        vertx.deployVerticle(testHandler);
-	        
-	        WebVerticle proxyVerticle = new ProxyVerticle();
-	        vertx.deployVerticle(proxyVerticle);
-	        
-	        WebVerticle postVerticle = new RecruitVerticle();
-	        vertx.deployVerticle(postVerticle);
-	        
-	        WebVerticle loginVerticle = new AuthVerticle();
-	        vertx.deployVerticle(loginVerticle);
-	        
-	        WebVerticle fileVerticle = new FileVerticle();
-	        vertx.deployVerticle(fileVerticle);
-	        
-	        addStaticHandler();
+	public void start() {
+		vertx = Vertx.vertx();
+		router = Router.router(vertx);
+
+		enableCorsSupport();
+		addBodyHandler();
+		addCookieHandler();
+		addSessionHandler();
+
+		// WebVerticle testHandler = new TestHandler();
+		// vertx.deployVerticle(testHandler);
+
+		WebVerticle proxyVerticle = new ProxyVerticle();
+		try {
+			proxyVerticle.start();
+
+			WebVerticle recruitVerticle = new RecruitVerticle();
+			recruitVerticle.start();
+
+			WebVerticle authVerticle = new AuthVerticle();
+			authVerticle.start();
+
+			WebVerticle fileVerticle = new FileVerticle();
+			fileVerticle.start();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-    public void enableCorsSupport() {
-    	router.route().handler(CorsHandler.create("http://localhost:3000")
-        		.allowedMethod(io.vertx.core.http.HttpMethod.GET)
-        		.allowedMethod(io.vertx.core.http.HttpMethod.POST)
-        		.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS)
-        		.allowCredentials(true)
-        		.allowedHeader("Access-Control-Allow-Method")
-        		.allowedHeader("Access-Control-Allow-Origin")
-        		.allowedHeader("Access-Control-Allow-Credentials")
-        		.allowedHeader("Content-Type"));
-    }
-    
-    public static RestAPIService getInstance() {
-    	return RestAPIWrapper.INSTANCE;
-    }
-    
-    public void addStaticHandler() {
-    	router.route().handler(StaticHandler.create("build"));
-    }
-    
-	public void addBodyHnadler() {
-        router.route().handler(BodyHandler.create());
-	}
-	
-	public void addCookieHandler() {
-        router.route().handler(CookieHandler.create());	
-	}
-	
-	public void addSessionHandler() {
-        router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
+		
+		addStaticHandler();
+		
+		vertx.createHttpServer().requestHandler(router::accept).listen(3000);
+
 	}
 
-	public static Router getRouter() {
-		return router;
+	public void enableCorsSupport() {
+		router.route()
+				.handler(CorsHandler.create("http://localhost:3000").allowedMethod(io.vertx.core.http.HttpMethod.GET)
+						.allowedMethod(io.vertx.core.http.HttpMethod.POST)
+						.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS).allowCredentials(true)
+						.allowedHeader("Access-Control-Allow-Method").allowedHeader("Access-Control-Allow-Origin")
+						.allowedHeader("Access-Control-Allow-Credentials").allowedHeader("Content-Type"));
+	}
+
+	public void addStaticHandler() {
+		router.route().handler(StaticHandler.create("build"));
+	}
+
+	public void addBodyHandler() {
+		router.route().handler(BodyHandler.create());
+	}
+
+	public void addCookieHandler() {
+		router.route().handler(CookieHandler.create());
+	}
+
+	public void addSessionHandler() {
+		router.route().handler(SessionHandler.create(LocalSessionStore.create(vertx)));
 	}
 
 	public static Vertx getVertx() {
 		return vertx;
+	}
+
+	public static RestAPIService getInstance() {
+		return RestAPIWrapper.INSTANCE;
+	}
+
+	public static Router getRouter() {
+		return router;
 	}
 }

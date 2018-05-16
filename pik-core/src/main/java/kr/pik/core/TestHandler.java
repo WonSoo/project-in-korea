@@ -2,6 +2,7 @@ package kr.pik.core;
 
 import org.bson.Document;
 
+import io.vertx.core.Future;
 import io.vertx.ext.web.*;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
@@ -9,7 +10,9 @@ import kr.pik.sql.SQLDialect;
 
 public class TestHandler extends WebVerticle {
 
-	public void start() {
+	@Override
+	public void start() throws Exception {
+    	System.out.println(this.getClass().getName() + "'s start() called.");
 		router.get("/test/addCookie").handler(this::addCookie);
 		router.get("/test/addSession").handler(this::addSession);
 		router.get("/test/getSession").handler(this::getSession);

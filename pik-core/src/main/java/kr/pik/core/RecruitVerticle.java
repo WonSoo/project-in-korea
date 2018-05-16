@@ -5,14 +5,13 @@
 
 package kr.pik.core;
 
+import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.*;
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
 import kr.pik.sql.SQLDialect;
@@ -21,17 +20,25 @@ import org.bson.Document;
 public class RecruitVerticle extends WebVerticle {
 	private SQLDialect recruitDialect;
 
-    public void start() {
+	@Override
+	public void start() throws Exception {
+    	System.out.println(this.getClass().getName() + "'s start() called.");
     	recruitDialect = FactorySQLDialect.createSQLDialect(Dialect.Recruit);
     	
         router.get("/api/recruit/getCategoies").handler(this::getCategories);
         router.get("/api/recruit/getKeyword").handler(this::getKeyword);
         router.get("/api/recruit").handler(this::getAmount);
         router.post("/api/recruit").handler(this::addRecruit);
+        router.get("/api/recruitTest").handler(this::test);
         
         router.get("/api/recruit/:id").handler(this::getRecruit);
         router.put("/api/recruit/:recruit_id").handler(this::updateRecruit);
         router.delete("/api/recruit/:recruit_id").handler(this::deleteRecruit);
+    }
+    
+    private void test(RoutingContext routingContext) {
+    	System.out.println("test called!");
+    	routingContext.response().end("test() called!");
     }
     
     private void getCategories(RoutingContext routingContext) {
@@ -89,6 +96,7 @@ public class RecruitVerticle extends WebVerticle {
     }
 
     private void getRecruit(RoutingContext routingContext) {
+    	System.out.println("getRecruit called!");
         Document searchQuery = new Document();
         searchQuery.put("_id", Integer.parseInt(routingContext.pathParam("id")));
 
@@ -97,9 +105,13 @@ public class RecruitVerticle extends WebVerticle {
         while(cursor.hasNext()) {
         	response_json = cursor.next().toJson();
         }
-
+        
         routingContext.response().setChunked(true);
-        routingContext.response().end(response_json);
+        
+        if(response_json != null) 
+            routingContext.response().end(response_json);
+        else
+        	routingContext.response().end();
     }
     
     private void updateRecruit(RoutingContext routingContext) {

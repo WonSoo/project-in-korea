@@ -2,6 +2,8 @@ package kr.pik.core;
 
 import java.util.Iterator;
 import org.bson.Document;
+
+import io.vertx.core.Future;
 import io.vertx.ext.web.RoutingContext;
 import kr.pik.auth.Account;
 import kr.pik.content.Status;
@@ -12,12 +14,15 @@ import kr.pik.sql.SQLDialect;
 public class ProxyVerticle extends WebVerticle{
 
 	private SQLDialect recruitDialect;
-	
-    public void start() {
+
+	@Override
+	public void start() {
+    	System.out.println(this.getClass().getName() + "'s start() called.");
     	recruitDialect = FactorySQLDialect.createSQLDialect(Dialect.Recruit);
     	
     	// We Have to implement it by annotation using reflection.
 
+        router.get("/api/recruitTest2").handler(this::test);
     	//File Proxy
 		router.get("/api/file/:file_name").handler(this::checkPermissionAccess);
 		router.post("/api/file").handler(this::checkPermissionAccess);
@@ -26,6 +31,11 @@ public class ProxyVerticle extends WebVerticle{
         router.post("/api/recruit").handler(this::checkPermissionAccess);
         router.put("/api/recruit/:recruit_id").handler(this::checkPermissionAccess);
         router.delete("/api/recruit/:recruit_id").handler(this::checkPermissionAccess);
+    }
+    
+    private void test(RoutingContext routingContext) {
+    	System.out.println("test called!");
+    	routingContext.response().end("test() called!");
     }
     
     public Account checkUnauthAccess(RoutingContext context) {

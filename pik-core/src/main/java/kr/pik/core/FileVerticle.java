@@ -7,14 +7,13 @@ package kr.pik.core;
 
 import io.vertx.ext.web.*;
 import kr.pik.content.Status;
-
 import java.util.Iterator;
-
 import org.bson.Document;
 
 public class FileVerticle extends WebVerticle {
 
-	public void start() {
+	@Override
+	public void start() throws Exception {
 		router.get("/api/file/:file_name").handler(this::getFile);
 		router.post("/api/file").handler(this::uploadFile);
 	}
