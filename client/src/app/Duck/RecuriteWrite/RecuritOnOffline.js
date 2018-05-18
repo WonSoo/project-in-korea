@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 const RecuritTagInputStyle = styled.select`
     width: 100%;
+    padding-left: 5px;
+    height: 30px;
 `;
 
 export const RecuritOnOffline = (props) => (

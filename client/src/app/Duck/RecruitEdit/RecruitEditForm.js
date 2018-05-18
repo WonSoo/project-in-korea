@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
-import RecuritFirstContainer from './RecuritFirstContainer';
+import RecuritFirstContainer from '../RecuriteWrite/RecuritFirstContainer';
 import styled from 'styled-components';
-import RecuritSecondContainer from './RecuritSecondContainer';
-import { RecuriteHeaderInput } from './RecuriteHeaderInput.';
-import { RecuritPosterInput } from './RecuritPosterInput';
-import { RecuritPurposeInput } from './RecuritPurposeInput';
+import RecuritSecondContainer from '../RecuriteWrite/RecuritSecondContainer';
+import { RecuriteHeaderInput } from '../RecuriteWrite/RecuriteHeaderInput.';
+import { RecuritPosterInput } from '../RecuriteWrite/RecuritPosterInput';
+import { RecuritPurposeInput } from '../RecuriteWrite/RecuritPurposeInput';
 import 'semantic-ui-css/semantic.min.css';
 import { Button, Container, Divider, Grid, Header, Image, Menu, Segment, Input, Dropdown, Label, List, Table } from 'semantic-ui-react'
-import { RecuritDateInput } from './RecuritDateInput';
-import { RecuritTagInput } from './RecuritTagInput';
-import { RecuritOnOffline } from './RecuritOnOffline';
-import { RecuritPayInput } from './RecuritPayInput';
-import RecuritDuring from './RecuritDuring';
-import RecuritJob from './RecuritJob';
-import ColorTagSelector from './ColorTagSelector';
+import { RecuritDateInput } from '../RecuriteWrite/RecuritDateInput';
+import { RecuritTagInput } from '../RecuriteWrite/RecuritTagInput';
+import { RecuritOnOffline } from '../RecuriteWrite/RecuritOnOffline';
+import { RecuritPayInput } from '../RecuriteWrite/RecuritPayInput';
+import RecuritDuring from '../RecuriteWrite/RecuritDuring';
+import RecuritJob from '../RecuriteWrite/RecuritJob';
+import ColorTagSelector from '../RecuriteWrite/ColorTagSelector';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { EditorState, convertToRaw } from 'draft-js';
-import ImageUploader from './ImageUploader';
+import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import ImageUploader from '../RecuriteWrite/ImageUploader';
 import Axios from '../../util/customAxios';
-import './react_dates_overrides.css';
-
+import '../RecuriteWrite/react_dates_overrides.css';
+import moment from 'moment';
 
 const RecuritFormContainerStyle = styled.div`
     /* width: 980px; */
@@ -51,7 +51,7 @@ const GridColumnHeader = styled.h4`
   margin-right: 5px;
 `
 
-class RecuritWriteForm extends Component {
+class RecruitEditForm extends Component {
 
   constructor(props) {
     super(props);
@@ -63,6 +63,42 @@ class RecuritWriteForm extends Component {
 
     this.handleColorTagChange = this.handleColorTagChange.bind(this);
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
+  }
+
+  componentWillMount() {
+      // ㅑㅇ
+      let res = {
+        "_id": 11, 
+        "content": "<p>asdfasdf</p>", 
+        "project_name": "name", 
+        "project_purpose": "purpose", 
+        "project_during": "1", 
+        "pay": "와우", 
+        "startDateObj": "2018-04-19T03:00:00.000Z", 
+        "endDateObj": "2018-05-14T03:00:00.000Z", 
+        "job_group": [{ "name": "필요 직군2", "do": "역할2" }, { "name": "필요 직군2", "do": "역할2" }], 
+        "time": "Mon Apr 16 23:34:30 KST 2018", 
+        "writer": null,
+        colortags: {
+          academic: 1,
+          activity: 1,
+          artistic: 1,
+          modern: 1,
+          public_interest: 1,
+          technical: 0,
+        }
+      };
+      console.log(res.content)
+      this.setState({
+          editorState: EditorState.createWithContent(ContentState.createFromBlockArray(htmlToDraft(res.content).contentBlocks)),
+          job_group: res.job_group,
+          startDateObj: moment(res.startDateObj),
+          endDateObj: moment(res.endDateObj),
+          pay: res.pay,
+          project_during: res.project_during,
+          project_purpose: res.project_purpose,
+          project_name: res.project_name,
+      })
   }
 
   uploadPoster = (file) => {
@@ -134,7 +170,7 @@ class RecuritWriteForm extends Component {
     delete result.editorState
 
     console.log(result)
-    Axios.post('/recruit', this.state)
+    Axios.put('/recruit', this.state)
       .then(function (response) {
         console.log(response)
       }).catch(function (error) {
@@ -154,7 +190,7 @@ class RecuritWriteForm extends Component {
                     <RecuriteHeaderInput placeholder="프로젝트 이름" name="project_name" value={this.state.project_name} onChange={this.onInputChange} />
                     <RecuritPurposeInput name="project_purpose" value={this.state.project_purpose} onChange={this.onInputChange} />
                   </div>
-                  <RecuritPosterInput onChange={this.uploadPoster}/>
+                  <RecuritPosterInput onChange={this.uploadPoster} value={this.state.poster}/>
                 </div>
               </Grid.Column>
             </Grid.Row>
@@ -226,7 +262,7 @@ class RecuritWriteForm extends Component {
           </Grid.Row>
           <Grid.Row style={{position: "relative", height: "50px"}}>
             <Grid.Column width={2} style={{position: "absolute", right: 0, display: "inline"}}>
-              <Button color="teal" onClick={this.onSubmit}>작성완료</Button>
+              <Button color="teal" onClick={this.onSubmit}>수정 완료</Button>
             </Grid.Column>
           </Grid.Row>
         </Container>
@@ -235,4 +271,4 @@ class RecuritWriteForm extends Component {
   }
 }
 
-export default RecuritWriteForm
+export default RecruitEditForm
