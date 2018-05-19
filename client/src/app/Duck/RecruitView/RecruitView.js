@@ -8,6 +8,7 @@ import ProjectPoster from './ProjectPoster';
 import ProjectArticle from './ProjectArticle';
 import Axios from '../../util/customAxios'
 import ColorTag from './ColorTag';
+import RecruitApplyManage from './RecruitApplyManage'
 
 const GridColumnHeader = styled.h4`
   display: inline-block;
@@ -111,12 +112,12 @@ class RecruitView extends Component {
   }
 
   onDelete = () => {
-    Axios.delete('/recruit/' + this.state.data._id,)
-    .then(function (response) {
-      console.log(response)
-    }).catch(function (error) {
-      console.log(error);
-    });
+    Axios.delete('/recruit/' + this.state.data._id, )
+      .then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error);
+      });
   }
 
   onEdit = () => {
@@ -128,9 +129,9 @@ class RecruitView extends Component {
       <RecuritFormContainerStyle>
         <Container style={{ width: "980px" }}>
           <div>
-            <div style={{position: "relative", height: "60px"}}>
-              <Button style={{ marginBottom: "20px"}} color="teal" onClick={this.onDelete}>글 삭제</Button>
-              <Button style={{ marginBottom: "20px"}} color="teal" onClick={this.onEdit}>글 수정</Button>
+            <div style={{ position: "relative", height: "60px" }}>
+              <Button style={{ marginBottom: "20px" }} color="teal" onClick={this.onDelete}>글 삭제</Button>
+              <Button style={{ marginBottom: "20px" }} color="teal" onClick={this.onEdit}>글 수정</Button>
             </div>
             <div style={{ width: "calc(100% - 202px)", display: "inline-block", marginRight: "10px", verticalAlign: "top" }}>
               <ProjectName>프로젝트 이름</ProjectName>
@@ -171,7 +172,20 @@ class RecruitView extends Component {
           <ProjectArticle>
             <p>여러분을 모집합니다.</p>
           </ProjectArticle>
-
+          <RecruitApplyManage applyList={
+            [{
+              name: '김지수',
+              position: '항해사'
+            },
+            {
+              name: '이원길',
+              position: '의료사'
+            },
+            {
+              name: '김재준',
+              position: '음악가'
+            },]
+          } />
         </Container>
       </RecuritFormContainerStyle>
     );
