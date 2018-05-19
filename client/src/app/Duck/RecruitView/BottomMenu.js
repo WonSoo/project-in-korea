@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import RecruitApplyRequest from './RecruitApplyRequest';
 import styled from 'styled-components';
 
-const BottomMenuContainer = styled.div`
+export const BottomMenuContainer = styled.div`
  margin-top: 20px;
  display: flex;
  justify-content: space-between;
@@ -10,7 +10,7 @@ const BottomMenuContainer = styled.div`
  border-bottom: 4px solid #FF869D;
 `
 
-const ButtomMenuButton = styled.button`
+export const ButtomMenuButton = styled.button`
   outline: none;
   background: none;
   border: none;
@@ -19,12 +19,12 @@ const ButtomMenuButton = styled.button`
   height: 30px; 
 `
 
-const Spliter = styled.span`
+export const Spliter = styled.span`
   padding: 0 10px;
   display: inline-block;
 `
 
-const InterstingButton = ButtomMenuButton.extend`
+export const InterstingButton = ButtomMenuButton.extend`
  background: white;
  line-height: 30px;
 `
