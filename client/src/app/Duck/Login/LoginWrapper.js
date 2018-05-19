@@ -77,7 +77,7 @@ class LoginWrapper extends PureComponent {
             console.log(response);
             if(response.status == 200) {
                 alert("success")
-                document.location.href = '/'
+                // document.location.href = '/'
             }
           })
           .catch(function (error) {
