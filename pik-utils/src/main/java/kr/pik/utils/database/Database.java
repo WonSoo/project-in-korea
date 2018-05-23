@@ -16,7 +16,7 @@ public enum Database {
     
     private Database() {
     	config = SecureConfig.getInstance();
-        this.uri = new MongoClientURI("mongodb+srv://" + config.getString("database.id") +":" + config.getString("database.password") + "@cluster0-t7aoq.mongodb.net/test?retryWrites=true");
+        this.uri = new MongoClientURI("mongodb+srv://" + config.getString("database.id") +":" + config.getString("database.password") + "@cluster0-t7aoq.mongodb.net/?ssl=true&maxIdleTimeMS=999999999");
         this.mongoClient = new MongoClient(this.uri);
         this.mongoDatabase = this.mongoClient.getDatabase("project-in-korea");
     }
