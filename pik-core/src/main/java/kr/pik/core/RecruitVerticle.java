@@ -5,13 +5,15 @@
 
 package kr.pik.core;
 
-import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.*;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import kr.pik.auth.Account;
+import kr.pik.content.Status;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
 import kr.pik.sql.SQLDialect;
@@ -19,11 +21,15 @@ import org.bson.Document;
 
 public class RecruitVerticle extends WebVerticle {
 	private SQLDialect recruitDialect;
+	private SQLDialect applyDialect;
+	private SQLDialect authDIalect;
 
 	@Override
 	public void start() throws Exception {
     	System.out.println(this.getClass().getName() + "'s start() called.");
     	recruitDialect = FactorySQLDialect.createSQLDialect(Dialect.Recruit);
+    	applyDialect = FactorySQLDialect.createSQLDialect(Dialect.Apply);
+    	authDIalect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
     	
         router.get("/api/recruit/getCategoies").handler(this::getCategories);
         router.get("/api/recruit/getKeyword").handler(this::getKeyword);
@@ -34,7 +40,69 @@ public class RecruitVerticle extends WebVerticle {
         router.get("/api/recruit/:id").handler(this::getRecruit);
         router.put("/api/recruit/:recruit_id").handler(this::updateRecruit);
         router.delete("/api/recruit/:recruit_id").handler(this::deleteRecruit);
+        
+        router.post("/api/recruit/apply").handler(this::apply);
+        router.post("/api/recruit/apply/process").handler(this::apply_process);
     }
+	
+	private void apply_process(RoutingContext context) {
+		JsonObject data = context.getBodyAsJson();
+		Document doc = new Document();
+		doc.put("apply_id", data.getString("apply_id"));
+		
+		Document a = applyDialect.findOne(new Document("active", new Document("$exists", true)));
+		if(a!= null) {
+			context.response().end(Status.RECRUIT_APPLY_PROCESS_FAIL.getJsonMessage());
+			return;
+		}
+
+		Document update = new Document("active", data.getBoolean("active"));
+		applyDialect.findOneAndUpdate(doc, new Document("$set", update));
+		
+		context.response().end(Status.RECRUIT_APPLY_PROCESS_SUCCESS.getJsonMessage());
+	}
+	
+	private void apply(RoutingContext context) {
+		JsonObject data = context.getBodyAsJson();
+		
+		JsonObject new_data = new JsonObject();
+		String writer = getAccount(context).getEmail();
+
+		Document doc = new Document();
+		doc.put("id", data.getString("recruit_id"));
+		doc.put("apply", new Document().put("writer", writer));
+		
+		Document isExist = recruitDialect.findOne(doc);
+		if(isExist != null) {
+			context.response().end(Status.RECRUIT_ALREADY_APPLIED.getJsonMessage());
+			return;
+		}
+		
+		new_data.put("recruit_id", data.getString("recruit_id"));
+		new_data.put("writer", writer);
+		new_data.put("time", String.valueOf(new Date()));
+		new_data.put("active", true);
+		
+		applyDialect.insert(Document.parse(new_data.toString()));
+		
+		JsonObject symbolic_data = new JsonObject();
+		Document inserted_data= applyDialect.findOne(Document.parse(new_data.toString()));
+		JsonObject inner_data = new JsonObject();
+		inner_data.put("apply_id", inserted_data.get("_id"));
+		inner_data.put("writer", writer);
+		
+		symbolic_data.put("apply", inner_data);
+		
+		Document recruit_searchKey = new Document("id", data.getString("recruit_id"));
+		recruitDialect.update(recruit_searchKey, Document.parse(symbolic_data.toString()));
+		
+		Document auth_searchKey = new Document("email", writer);
+		
+		Document updateDocument = new Document("$set", Document.parse(symbolic_data.toString()));
+		authDIalect.findOneAndUpdate(auth_searchKey, Document.parse(updateDocument.toString()));
+		
+		context.response().end(Status.RECRUIT_APPLY_SUCCESS.getJsonMessage());
+	}
     
     private void test(RoutingContext routingContext) {
     	System.out.println("test called!");
@@ -100,11 +168,13 @@ public class RecruitVerticle extends WebVerticle {
         Document searchQuery = new Document();
         searchQuery.put("_id", Integer.parseInt(routingContext.pathParam("id")));
 
-        Iterator<Document> cursor = recruitDialect.find(searchQuery);
+        Document doc = recruitDialect.findOne(searchQuery);
         String response_json = null;
-        while(cursor.hasNext()) {
-        	response_json = cursor.next().toJson();
-        }
+    	Account account = getAccount(routingContext);
+    	if(!doc.getString("writer").equals(account.getEmail())) {
+    		doc.remove("apply");
+    	}
+    	response_json = doc.toJson();
         
         routingContext.response().setChunked(true);
         

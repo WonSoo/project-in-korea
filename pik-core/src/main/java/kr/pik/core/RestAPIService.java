@@ -1,6 +1,8 @@
 package kr.pik.core;
 
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CookieHandler;
@@ -33,8 +35,8 @@ public class RestAPIService {
 		// WebVerticle testHandler = new TestHandler();
 		// vertx.deployVerticle(testHandler);
 
-		WebVerticle proxyVerticle = new ProxyVerticle();
 		try {
+			WebVerticle proxyVerticle = new ProxyVerticle();
 			proxyVerticle.start();
 
 			WebVerticle recruitVerticle = new RecruitVerticle();
@@ -53,13 +55,14 @@ public class RestAPIService {
 		
 		addStaticHandler();
 		
+		
 		vertx.createHttpServer().requestHandler(router::accept).listen(3000);
 
 	}
 
 	public void enableCorsSupport() {
 		router.route()
-				.handler(CorsHandler.create("http://localhost:3000").allowedMethod(io.vertx.core.http.HttpMethod.GET)
+				.handler(CorsHandler.create("http://192.168.0.27:3000").allowedMethod(io.vertx.core.http.HttpMethod.GET)
 						.allowedMethod(io.vertx.core.http.HttpMethod.POST)
 						.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS).allowCredentials(true)
 						.allowedHeader("Access-Control-Allow-Method").allowedHeader("Access-Control-Allow-Origin")
