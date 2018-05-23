@@ -69,12 +69,16 @@ class LoginWrapper extends PureComponent {
     }
 
     loginSubmit() {
-        Axios.post('/register', {
+        Axios.post('/login', {
             account_type: 'pik',
             email: this.state.email,
             password: this.state.password
         }).then(function (response) {
             console.log(response);
+            if(response.status == 200) {
+                alert("success")
+                // document.location.href = '/'
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -91,7 +95,7 @@ class LoginWrapper extends PureComponent {
                     <LoginInput placeholder="이메일" name='email' onChange={this.onStateChange}/>
                     <LoginInput type="password" placeholder="비밀번호" name='password' onChange={this.onStateChange} />
                     <label style={{fontSize: "10pt"}}><input type="checkbox" /> 로그인 유지</label>
-                    <LoginButton onChane={this.loginSubmit}>로그인</LoginButton>
+                    <LoginButton onClick={this.loginSubmit}>로그인</LoginButton>
                     <LoginMenu />
                     <MiddleLine />
                     <SnsServiceContainer />

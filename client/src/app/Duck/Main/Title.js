@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
-
+import logo from '../../../res/logo.gif'
 const Title = styled.h1`
     font-size: 15pt;
     line-height: ${props => props.height};
@@ -20,10 +20,11 @@ const Character = styled.p`
 
 export default ({ children, ...rest }) => {
     return (
-        <Title {...rest} >
-            <Character>프로젝트</Character>
-            <Character>인</Character>
-            <Character>코리아</Character>
-        </Title>
+        // <Title {...rest} >
+        //     <Character>프로젝트</Character>
+        //     <Character>인</Character>
+        //     <Character>코리아</Character>
+        // </Title>
+        <img src={logo}/>
     );
 };

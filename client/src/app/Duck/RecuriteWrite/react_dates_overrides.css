@@ -1,0 +1,25 @@
+.CalendarDay__highlighted_calendar {
+	background: #82E0AA;
+	color: #186A3B;
+}
+
+.CalendarDay__highlighted_calendar:hover {
+	background: #58D68D;
+	color: #186A3B;
+}
+
+.CalendarDay__highlighted_calendar:active {
+	background: #58D68D;
+	color: #186A3B;
+}
+
+.DateRangePicker_picker {
+	z-index: 100;
+}
+
+.DateInput_input {
+	line-height: 30px;
+	padding: 0px 10px 0px;
+	font-size: 13px;
+	text-align: center;
+}

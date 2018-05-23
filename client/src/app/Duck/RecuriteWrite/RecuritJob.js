@@ -10,10 +10,9 @@ const AddButton = styled.span`
     /* width: 40px;
     height: 40px;
     margin: 0 auto; */
-    color: white;
     font-size: 13pt;
     border-radius: 100px;
-    border: solid 1px white;
+    border: solid 1px black;
 `;
 
 export default class RecuritJob extends Component {
@@ -31,13 +30,27 @@ export default class RecuritJob extends Component {
         this.removeJob = this.removeJob.bind(this);
     }
 
+    componentWillMount() {
+        if(this.props.value)
+        this.setState({
+            jobs: this.props.value
+        })
+    }
+
     jobOnChange(e, index) {
         let newJobs = [...[], ...this.state.jobs];
         newJobs[index][e.target.name] = e.target.value;
         this.setState({
             jobs: newJobs
         })
+        this.props.onChange({
+            target: {
+                name: this.props.name,
+                value: newJobs
+            }
+        });
     }
+
 
     addJob() {
         this.setState({
@@ -67,10 +80,10 @@ export default class RecuritJob extends Component {
     render() {
         const jobToTr = this.state.jobs.map((job, index) => (
             <tr>
-                <td style={{width: "30%"}}><input placeholder="필요 직군" style={{width: "100%"}} name="name" onChange={(e) => {
+                <td style={{width: "30%", height: "30px"}}><input placeholder="필요 직군" style={{paddingLeft: "5px", width: "100%", height: "30px"}} name="name" onChange={(e) => {
                     this.jobOnChange(e, index)
                 }} value={this.state.jobs[index].name} /></td>
-                <td style={{width: "70%"}}><input placeholder="역할" style={{width: "100%"}} name="do" onChange={(e) => {
+                <td style={{width: "70%", height: "30px"}}><input placeholder="역할" style={{paddingLeft: "5px", width: "100%", height: "30px"}} name="do" onChange={(e) => {
                     this.jobOnChange(e, index)
                 }} value={this.state.jobs[index].do} /></td>
                 <td>
@@ -81,7 +94,7 @@ export default class RecuritJob extends Component {
             </tr>
         ))
         return (
-            <div>
+            <div style={{verticalAlign: "middle"}}>
                 <table style={{width: "100%"}}>
                     {jobToTr}
                 </table>

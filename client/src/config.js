@@ -1,3 +1,3 @@
 export default {
-    host: 'http://cynos07.iptime.org'
+    host: 'real-home.iptime.org:3000'
 }
