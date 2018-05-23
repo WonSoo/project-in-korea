@@ -26,7 +26,12 @@ public enum Status {
 	REGISTER_FAIL_EMAIL_NOT_VERIFIED(false, "이메일인증을 받지 않았습니다."),
 
 	REGISTER_FAIL_INVALID_REPASSWORD(false, "재입력한 비밀번호가 잘못되었습니다."),
-	REGISTER_FAIL_EXIST_USER(false, "이미 존재하는 계정입니다.");
+	REGISTER_FAIL_EXIST_USER(false, "이미 존재하는 계정입니다."),
+	
+	RECRUIT_ALREADY_APPLIED(false, "이미 모집글에 신청하셨습니다."),
+	RECRUIT_APPLY_SUCCESS(true, "모집 신청에 성공하셨습니다."), RECRUIT_APPLY_PROCESS_SUCCESS(true, "성공"), RECRUIT_APPLY_PROCESS_FAIL(false, "이미 처리된 요청입니다."), COMMENT_SUCCESS(true, "댓글 작성 완료"),
+	
+	;
 	
 	final private boolean isSuccess;
     final private String message;

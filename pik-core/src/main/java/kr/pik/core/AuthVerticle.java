@@ -57,7 +57,6 @@ public class AuthVerticle extends WebVerticle {
 			session.put("verified", true);
 			return;
 		}
-		;
 		response.end(Status.EMAIL_VERIFY_CHECK_FAIL.getJsonMessage());
 	}
 
@@ -103,8 +102,8 @@ public class AuthVerticle extends WebVerticle {
 				return;
 			}
 
-			authManager = new PIKAuth(json.getString("name"), json.getString("email"), json.getString("password"),
-					json.getString("repassword"));
+			authManager = new PIKAuth(json.getString("email"), json.getString("password"),
+					json.getString("repassword"),json.getString("name"));
 
 			Status register_result = authManager.register();
 			response.end(register_result.getJsonMessage());
@@ -140,10 +139,21 @@ public class AuthVerticle extends WebVerticle {
 			return;
 		}
 
-		if (account.getStatus().isSuccess())
+		if (account.getStatus().isSuccess()) {
+			System.out.println("login cookie added");
 			addLoginCookie(routingContext, account);
+			System.out.println(routingContext.getCookie(LOGIN_COOKIE));
+		}
 
 		response.end(account.getStatus().getJsonMessage());
 		return;
+	}
+	
+	public static Account getAccountInfo(RoutingContext context) {
+    	if(context.getCookie(LOGIN_COOKIE) != null) {
+    		Account account = context.session().get(context.getCookie(LOGIN_COOKIE).getValue());
+    		return account;
+    	}
+    	return null;
 	}
 }
