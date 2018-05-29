@@ -19,7 +19,7 @@ const RecruitApplyManageDecideButton = styled.button`
   border: none;
   height: 40px;
   line-height: 40px;
-  padding: 0 10px;
+  padding: 0 20px;
   font-weight: 900;
   text-decoration: underline;
 `

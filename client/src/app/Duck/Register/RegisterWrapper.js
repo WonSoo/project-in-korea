@@ -98,11 +98,12 @@ class RegisterWrapper extends PureComponent {
             account_type: 'pik',
             name: this.state.name,
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            repassword: this.state.repassword,
         }).then(function (response) {
             console.log(response);
             if(response.status == 200) {
-                document.location.href = '/'
+                // document.location.href = '/'
             }
         }).catch(function (error) {
             console.log(error);
@@ -170,7 +171,7 @@ class RegisterWrapper extends PureComponent {
                             <p style={{ marginBottom: "10px" }}>소중한 정보를 입력해 주세요.</p>
                             <LoginInput placeholder="이름" name="name" value={this.state.name} onChange={this.onStateChange}></LoginInput>
                             <LoginInput placeholder="패스워드" name="password" onChange={this.onStateChange}></LoginInput>
-                            <LoginInput placeholder="패스워드 확인"></LoginInput>
+                            <LoginInput placeholder="패스워드 확인" name="repassword" onChange={this.onStateChange}></LoginInput>
                             <LoginButton onClick={this.registerSubmit}>회원가입</LoginButton>
                         </LoginCard>
                     </CardContainer>
