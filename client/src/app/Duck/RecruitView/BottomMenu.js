@@ -27,6 +27,8 @@ export const Spliter = styled.span`
 export const InterstingButton = ButtomMenuButton.extend`
  background: white;
  line-height: 30px;
+ text-align: center;
+ padding: 0 20px;
 `
 
 

@@ -9,6 +9,8 @@ import ProjectArticle from './ProjectArticle';
 import Axios from '../../util/customAxios'
 import ColorTag from './ColorTag';
 import RecruitApplyManage from './RecruitApplyManage'
+import BottomMenu from './BottomMenu'
+import CommentContainer from './CommentContainer'
 
 const GridColumnHeader = styled.h4`
   display: inline-block;
@@ -186,7 +188,10 @@ class RecruitView extends Component {
               position: '음악가'
             },]
           } />
+          <BottomMenu />
+          <CommentContainer />
         </Container>
+        
       </RecuritFormContainerStyle>
     );
   }
