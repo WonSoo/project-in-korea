@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const __Free__Comment = styled.textarea`
   width: 100%;
-  height: 110px;
+  height: 80px;
 `
 
 export default ({ service, value }) => (

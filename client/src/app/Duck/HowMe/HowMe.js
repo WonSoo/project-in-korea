@@ -26,14 +26,15 @@ const __HowME__Info__Container = styled.div`
 
 const __DefaultProfile__Container = styled.div`
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 20px;
     vertical-align: middle;
 `
 
 const __UserInfo__Container = styled.div`
+    margin-top: 20px;
     display: inline-block;
     vertical-align: middle;
-    width: 780px;
+    width: 740px;
 `
 
 const __LineBreak = styled.div`

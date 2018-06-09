@@ -9,13 +9,12 @@ const __Writen__Article = styled.span`
     line-height: 30px;
     box-sizing: border-box;
     vertical-align: middle;
-    margin-left: 10px;
-    width: 100px;
+    margin: 0 10px;
 `;
 
 export default ({ count }) => (
     <__Writen__Article>
-        글: {count}
+        글 {count}
     </__Writen__Article>
 )
 

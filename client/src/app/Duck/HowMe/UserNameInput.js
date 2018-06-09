@@ -3,14 +3,16 @@ import styled from 'styled-components';
 
 const __Span__Input = styled.input`
     outline: none;
-    border: ${props => props.isActive ? 'solid black 1px' : 'none'};
+    /* border: ${props => props.isActive ? 'solid black 1px' : 'none'}; */
+    border: none;
     background: ${props => props.isActive ? 'white' : 'none'};
-    height: 30px;
+    height: 46px;
     box-sizing: border-box;
     padding: 0;
-    padding-left: 10px;
+    padding: 0 10px;
     vertical-align: middle;
     width: 100px;
+    font-size: 24px;
 `
 
 class UserNameInput extends Component {
