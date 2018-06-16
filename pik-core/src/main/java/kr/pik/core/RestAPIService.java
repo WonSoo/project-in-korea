@@ -37,7 +37,7 @@ public class RestAPIService {
 
 		try {
 			WebVerticle proxyVerticle = new ProxyVerticle();
-			proxyVerticle.start();
+//			proxyVerticle.start();
 
 			WebVerticle recruitVerticle = new RecruitVerticle();
 			recruitVerticle.start();
@@ -56,13 +56,13 @@ public class RestAPIService {
 		addStaticHandler();
 		
 		
-		vertx.createHttpServer().requestHandler(router::accept).listen(3000);
+		vertx.createHttpServer().requestHandler(router::accept).listen(3333);
 
 	}
 
 	public void enableCorsSupport() {
 		router.route()
-				.handler(CorsHandler.create("http://192.168.0.27:3000").allowedMethod(io.vertx.core.http.HttpMethod.GET)
+				.handler(CorsHandler.create("*").allowedMethod(io.vertx.core.http.HttpMethod.GET)
 						.allowedMethod(io.vertx.core.http.HttpMethod.POST)
 						.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS).allowCredentials(true)
 						.allowedHeader("Access-Control-Allow-Method").allowedHeader("Access-Control-Allow-Origin")

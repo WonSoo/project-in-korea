@@ -139,7 +139,7 @@ public class RecruitVerticle extends WebVerticle {
     }
 
     private void getAmount(RoutingContext routingContext) {
-        int limit = Integer.parseInt(routingContext.pathParam("limit"));
+        int limit = Integer.parseInt(routingContext.request().getParam("limit"));
         Iterator<Document> cursor = recruitDialect.find(null, limit, 15);
         
         JsonArray jsonArray = new JsonArray();
@@ -152,11 +152,18 @@ public class RecruitVerticle extends WebVerticle {
     }
     
     private void addRecruit(RoutingContext routingContext) {
+    	System.out.println("aa");
         JsonObject json = routingContext.getBodyAsJson();
+		System.out.println("bb");
+		
 
-        json.put("writer", getAccount(routingContext).getEmail());
+		System.out.println("cc");
+//        json.put("writer", getAccount(routingContext).getEmail());
+
+		System.out.println("dd");
         json.put("time", String.valueOf(new Date()));
 
+        System.out.println(Document.parse(json.toString()));
         recruitDialect.insert(Document.parse(json.toString()));
         routingContext.response().setStatusCode(200);
         routingContext.response().setStatusMessage("post writed");
@@ -166,7 +173,12 @@ public class RecruitVerticle extends WebVerticle {
     private void getRecruit(RoutingContext routingContext) {
     	System.out.println("getRecruit called!");
         Document searchQuery = new Document();
-        searchQuery.put("_id", Integer.parseInt(routingContext.pathParam("id")));
+        String id = routingContext.pathParam("id");
+        if(id == null) {
+        	routingContext.response().end("id is null");
+        	return;
+        }
+        searchQuery.put("_id", Integer.parseInt(id));
 
         Document doc = recruitDialect.findOne(searchQuery);
         String response_json = null;

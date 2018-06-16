@@ -38,7 +38,7 @@ public class SQLDialect {
 
     private void createCountCollection() {
         Document insertDoc = new Document();
-        insertDoc.append("_id", collectionName);
+        insertDoc.append("id", collectionName);
         insertDoc.append("seq", Integer.valueOf(0));
         countCollection.insertOne(insertDoc);
     }
@@ -58,7 +58,9 @@ public class SQLDialect {
 	
 	public void insert(Document document) {
 		updateId(document);
+		System.out.println(document);
 		collection.insertOne(document);
+		System.out.println("after inserOne");
 	}
 	
 	public void delete(Document searchKey) {
@@ -76,15 +78,11 @@ public class SQLDialect {
 	}
 	
 	public Document findOne() {
-		MongoCursor<Document> iterator = collection.find().limit(1).iterator();
-		
-		return iterator.next();
+		return collection.find().first();
 	}
 	
 	public Document findOne(Document searchKey) {
-		MongoCursor<Document> iterator = collection.find(searchKey).limit(1).iterator();
-		
-		return iterator.next();
+		return collection.find(searchKey).first();
 	}
 	
 	public Iterator<Document> find() {
@@ -98,7 +96,11 @@ public class SQLDialect {
 	}
 	
 	public Iterator<Document> find(Document searchKey, int lastIndex, int limit) {
-		MongoCursor<Document> iterator = collection.find(searchKey).skip(lastIndex).limit(limit).iterator();
+		MongoCursor<Document> iterator = null;
+		if(searchKey != null)
+			iterator = collection.find(searchKey).skip(lastIndex).limit(limit).iterator();
+		else
+			iterator = collection.find().skip(lastIndex).limit(limit).iterator();
 		return iterator;
 	}
 }

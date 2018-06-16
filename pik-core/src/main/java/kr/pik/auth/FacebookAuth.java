@@ -11,17 +11,18 @@ import org.bson.Document;
 import com.google.gson.Gson;
 
 import kr.pik.content.Status;
+import kr.pik.sql.FactorySQLDialect;
+import kr.pik.sql.SQLDialect;
+import kr.pik.sql.FactorySQLDialect.Dialect;
 import kr.pik.utils.database.Database;
 
 public class FacebookAuth implements AuthManager{
-	Database database = null;
+	SQLDialect authDialect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
 	String accessToken = null;
 	Account account = null;
 
 	public FacebookAuth(String accessToken) {
 		this.accessToken = accessToken;
-		
-		this.database = Database.getInstance();
 	}
 	
 	private Account findUserByAccessToken()

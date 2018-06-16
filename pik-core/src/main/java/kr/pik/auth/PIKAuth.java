@@ -2,11 +2,13 @@ package kr.pik.auth;
 
 import org.bson.Document;
 import kr.pik.content.Status;
+import kr.pik.sql.FactorySQLDialect;
+import kr.pik.sql.FactorySQLDialect.Dialect;
+import kr.pik.sql.SQLDialect;
 import kr.pik.utils.database.Database;
 
 public class PIKAuth implements AuthManager {
-	Database database;
-
+	SQLDialect authDialect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
 	String name;
 	String email;
 	String password;
@@ -15,8 +17,6 @@ public class PIKAuth implements AuthManager {
 	public PIKAuth(String email, String password) {
 		this.email = email;
 		this.password = password;
-
-		this.database = Database.getInstance();
 	}
 
 	public PIKAuth(String email, String password, String repassword, String name) {
@@ -24,15 +24,13 @@ public class PIKAuth implements AuthManager {
 		this.password = password;
 		this.repassword = repassword;
 		this.name = name;
-
-		this.database = Database.getInstance();
 	}
 
 	private Document findUserByEmail() {
 		Document searchQuery = new Document();
 		searchQuery.put("accountType", "pik");
 		searchQuery.put("email", email);
-		Document result = database.getCollection("users").find(searchQuery).first();
+		Document result = authDialect.findOne(searchQuery);
 
 		return result;
 	}
@@ -64,7 +62,7 @@ public class PIKAuth implements AuthManager {
 		inputQuery.put("name", name);
 		inputQuery.put("email", email);
 		inputQuery.put("password", password);
-		database.getCollection("users").insertOne(inputQuery);
+		authDialect.insert(inputQuery);
 
 		return Status.REGISTER_SUCCESS;
 	}
