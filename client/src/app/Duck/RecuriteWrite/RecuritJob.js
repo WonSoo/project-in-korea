@@ -62,6 +62,12 @@ export default class RecuritJob extends Component {
                 }
             ]
         })
+        this.props.onChange({
+            target: {
+                name: this.props.name,
+                value: this.state.jobs
+            }
+        });
     }
 
     removeJob(deleteIndex) {
@@ -74,7 +80,12 @@ export default class RecuritJob extends Component {
         this.setState({
             jobs: newJobs
         });
-
+        this.props.onChange({
+            target: {
+                name: this.props.name,
+                value: this.state.jobs
+            }
+        });
     }
 
     render() {

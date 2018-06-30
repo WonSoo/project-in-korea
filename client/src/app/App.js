@@ -14,6 +14,7 @@ import Login from './View/Page/Login';
 import Register from './View/Page/Register';
 import RecuritWrite from './View/Page/RecuritWrite';
 import RecruitEdit from './View/Page/RecruitEdit';
+import HowMeWrite from './View/Page/HowMeWrite';
 
 class App extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class App extends Component {
               <Route exact path="/Recurit/:ID" component={RecruitView} />
               <Route exact path="/Recurit/write/write" component={RecuritWrite} />
               <Route exact path="/Recurit/edit/:ID" component={RecruitEdit} />
+              <Route path="/HowMe/Write" component={HowMeWrite} />
               <Route path="/HowMe" component={HowMe} />
               <Route path="/WeDo" component={WeDo} />
               <Route path="/Login" component={Login} />

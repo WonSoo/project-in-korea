@@ -5,6 +5,8 @@ import MiddleLine from '../Login/MiddleLine';
 import LoginMenu from '../Login/LoginMenu';
 import SnsServiceContainer from '../Login/SnsServiceContainer';
 import Axios from '../../util/customAxios';
+import AuthProto from '../../Protos/auth_pb.js';
+import StatusProto from '../../Protos/status_pb.js'
 
 const LoginCard = styled.div`
     margin: 160px auto 300px auto;
@@ -93,45 +95,90 @@ class RegisterWrapper extends PureComponent {
         });
     }
 
-    registerSubmit() {
-        Axios.post('/register', {
-            account_type: 'pik',
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password,
-            repassword: this.state.repassword,
-        }).then(function (response) {
-            console.log(response);
-            if(response.status == 200) {
-                // document.location.href = '/'
-            }
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
+    async registerSubmit() {
+        const registerMessage = new AuthProto.RegisterMessage()
+        const emailRegisterMessage = new AuthProto.RegisterMessage.EmailRegisterMessage()
 
-    sendEmail = (email) => {
-        Axios.post("/register_verify", {
-            email: email
-        }).then((response) => {
-            this.moveToNextCard()
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
+        emailRegisterMessage.setEmail(this.state.email)
+        emailRegisterMessage.setPassword(this.state.password)
+        emailRegisterMessage.setName(this.state.name)
 
-    sendCode = (verify_number) => {
-        Axios.post("/register_verify_check", {
-            verify_number: verify_number
-        }, {
-                headers: {
-                    'Access-Control-Request-Headers': 'Content-Type'
-                }
-            }).then((response) => {
+        registerMessage.setEmailregister(emailRegisterMessage)
+
+        const bytes = registerMessage.serializeBinary()
+        var blob = new Blob([bytes])
+
+        try {
+            const res = await Axios.post('/register', blob, {
+                responseType: 'arraybuffer'
+            })
+            const StatusMessage = StatusProto.ResponseStatusMessage.deserializeBinary(res.data)
+
+            console.log(StatusMessage.getMessage())
+            if (StatusMessage.getIssuccess()) {
                 this.moveToNextCard()
-            }).catch(function (error) {
-                console.log(error);
-            });
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    sendEmail = async (email) => {
+        const registerVerifyMessage = new AuthProto.RegisterVerifyMessage()
+
+        registerVerifyMessage.setEmail(email)
+
+        const bytes = registerVerifyMessage.serializeBinary()
+        var blob = new Blob([bytes])
+
+        try {
+            const res = await Axios.post('/register_verify', blob, {
+                responseType: 'arraybuffer'
+            })
+            const StatusMessage = StatusProto.ResponseStatusMessage.deserializeBinary(res.data)
+            console.log(StatusMessage.getMessage())
+            if (StatusMessage.getIssuccess()) {
+                this.moveToNextCard()
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    sendCode = async (verify_number) => {
+
+        const registerVerifyCheckMessage = new AuthProto.RegisterVerifyCheckMessage()
+
+        registerVerifyCheckMessage.setVerifynumber(verify_number)
+
+        const bytes = registerVerifyCheckMessage.serializeBinary()
+        var blob = new Blob([bytes])
+
+        try {
+            const res = await Axios.post('/register_verify_check', blob, {
+                responseType: 'arraybuffer'
+            })
+            const StatusMessage = StatusProto.ResponseStatusMessage.deserializeBinary(res.data)
+            console.log(StatusMessage.getMessage())
+            if (StatusMessage.getIssuccess()) {
+                this.moveToNextCard()
+            }
+        } catch (err) {
+            console.log(err)
+        }
+
+
+        // Axios.post("/register_verify_check", {
+        //     verify_number: verify_number
+        // }, {
+        //         headers: {
+        //             'Access-Control-Request-Headers': 'Content-Type'
+        //         }
+        //     }).then((response) => {
+        //         this.moveToNextCard()
+        //     }).catch(function (error) {
+        //         console.log(error);
+        //     });
     }
 
     render() {

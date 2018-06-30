@@ -20,7 +20,6 @@ class UserNameInput extends Component {
     super(props)
 
     this.state = {
-      name: this.props.name,
       isActive: false,
     }
   }
@@ -29,6 +28,8 @@ class UserNameInput extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
+
+    this.props.onChange(e.target.value)
   }
 
   onClick = (e) => {
@@ -41,8 +42,8 @@ class UserNameInput extends Component {
     return (
       <__Span__Input
         isActive={this.state.isActive}
-        value={this.state.name}
-        name="name"
+        value={this.props.userName}
+        name={this.props.name}
         onChange={this.onChange}
         onClick={this.onClick} />
     );

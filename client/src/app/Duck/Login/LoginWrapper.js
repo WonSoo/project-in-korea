@@ -5,6 +5,8 @@ import MiddleLine from './MiddleLine';
 import SnsServiceContainer from './SnsServiceContainer';
 import LoginMenu from './LoginMenu';
 import Axios from '../../util/customAxios';
+import AuthProto from '../../Protos/auth_pb.js';
+import StatusProto from '../../Protos/status_pb.js'
 
 const LoginCard = styled.div`
     margin: 160px auto 300px auto;
@@ -68,21 +70,37 @@ class LoginWrapper extends PureComponent {
         });
     }
 
-    loginSubmit() {
-        Axios.post('/login', {
-            account_type: 'pik',
-            email: this.state.email,
-            password: this.state.password
-        }).then(function (response) {
-            console.log(response);
-            if(response.status == 200) {
-                alert("success")
-                // document.location.href = '/'
+    async loginSubmit() {
+        const LoginMessage = new AuthProto.LoginMessage()
+        const EmailLoginMessage = new AuthProto.LoginMessage.EmailLoginMessage()
+        
+        EmailLoginMessage.setEmail(this.state.email)
+        EmailLoginMessage.setPassword(this.state.password)
+
+        LoginMessage.setEmaillogin(EmailLoginMessage);
+        console.log(LoginMessage)
+        var bytes = LoginMessage.serializeBinary()
+        var blob = new Blob([bytes])
+        console.log(bytes)
+        console.log(blob)
+
+        try {
+            const res = await Axios.post('/login', blob, {
+                responseType: 'arraybuffer'
+            })
+            console.log(res)
+            // const bytes = new Blob([res.data]);
+            console.log(bytes)
+            const StatusMessage = StatusProto.ResponseStatusMessage.deserializeBinary(res.data)
+            console.log(StatusMessage.getMessage())
+
+            console.log(StatusMessage.getIssuccess())
+            if(StatusMessage.getIssuccess()) {
+                document.location.href = '/'
             }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     render() {
@@ -91,10 +109,10 @@ class LoginWrapper extends PureComponent {
                 {/* <BackgroundImg src="http://www.popco.net/zboard/data/dica_forum_sony/2017/05/26/1034748729592840469c02f.jpg" /> */}
                 <LoginCard>
                     <LoginHeader>로그인</LoginHeader>
-                    <p style={{marginBottom: "10px"}}>로그인 하시고 더 놀라운 프로젝트 인 코리아를 만나보세요!</p>
-                    <LoginInput placeholder="이메일" name='email' onChange={this.onStateChange}/>
+                    <p style={{ marginBottom: "10px" }}>로그인 하시고 더 놀라운 프로젝트 인 코리아를 만나보세요!</p>
+                    <LoginInput placeholder="이메일" name='email' onChange={this.onStateChange} />
                     <LoginInput type="password" placeholder="비밀번호" name='password' onChange={this.onStateChange} />
-                    <label style={{fontSize: "10pt"}}><input type="checkbox" /> 로그인 유지</label>
+                    <label style={{ fontSize: "10pt" }}><input type="checkbox" /> 로그인 유지</label>
                     <LoginButton onClick={this.loginSubmit}>로그인</LoginButton>
                     <LoginMenu />
                     <MiddleLine />

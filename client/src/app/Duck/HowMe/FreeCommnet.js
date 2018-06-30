@@ -6,7 +6,7 @@ const __Free__Comment = styled.textarea`
   height: 80px;
 `
 
-export default ({ service, value }) => (
-    <__Free__Comment>
+export default ({ onChange, value }) => (
+    <__Free__Comment onChange={onChange} value={value}>
     </__Free__Comment>
 )

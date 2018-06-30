@@ -171,7 +171,7 @@ class ColorTagSelector extends Component {
       if (newColorList.length > 0) {
         newHexColor = this.colorMixAdditive(newColorList)
       }
-      
+
       const newValue = JSON.parse(JSON.stringify(this.state.value));
       newValue[this.toAdjective(color)]++;
       this.setState({
@@ -182,7 +182,7 @@ class ColorTagSelector extends Component {
       this.props.onChange({
         target: {
           name: this.props.name,
-          value: newValue
+          value: this.state.colorList.map(color => this.toEnumValue(this.toAdjective()))
         }
       });
 
@@ -215,7 +215,7 @@ class ColorTagSelector extends Component {
     this.props.onChange({
       target: {
         name: this.props.name,
-        value: newValue
+        value: this.state.colorList.map(color => this.toEnumValue(this.toAdjective()))
       }
     });
   }
@@ -226,20 +226,33 @@ class ColorTagSelector extends Component {
     })
   }
 
+  toEnumValue = (color) => {
+    const colorEnum = {
+      ACTIVITY: 0,
+      TECHNICAL: 1,
+      ACADEMIC: 2,
+      PUBLIC_INTEREST: 3,
+      ARTISTIC: 4,
+      MODERN: 5,
+    }
+
+    return colorEnum[color]
+  }
+
   toAdjective = (code) => {
     switch (code) {
       case '#ff000f':
-        return 'activity'
+        return 'ACTIVITY'
       case '#0050ff':
-        return 'technical'
+        return 'TECHNICAL'
       case '#f19914':
-        return 'academic'
+        return 'ACADEMIC'
       case '#64ff00':
-        return 'public_interest'
+        return 'PUBLIC_INTEREST'
       case '#fdf21e':
-        return 'artistic'
+        return 'ARTISTIC'
       case '#7e00ff':
-        return 'modern'
+        return 'MODERN'
     }
   }
 

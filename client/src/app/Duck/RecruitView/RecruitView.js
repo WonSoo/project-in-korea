@@ -11,6 +11,7 @@ import ColorTag from './ColorTag';
 import RecruitApplyManage from './RecruitApplyManage'
 import BottomMenu from './BottomMenu'
 import CommentContainer from './CommentContainer'
+import RecruitProto from '../../Protos/recruit_pb.js'
 
 const GridColumnHeader = styled.h4`
   display: inline-block;
@@ -100,9 +101,10 @@ class RecruitView extends Component {
     }
 
     Axios.get(`/recruit/${ID}`)
-      .then(response => {
+      .then(res => {
+        const recruitPost = RecruitProto.RecruitProto.deserializeBinary(res)
         this.setState({
-          data: response.data
+          data: recruitPost
         })
       }).catch(err => {
 

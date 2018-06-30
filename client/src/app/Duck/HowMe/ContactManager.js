@@ -13,33 +13,63 @@ const __DefaultProfile__Name = styled.span`
   font-size: 2rem;
 `
 
-const contactData = [
-    {
-        service: 'kakaotalk',
-        value: 'thisisMtyID'
-    },
-    {
-        service: 'facebook',
-        value: 'FakeBook@@'
-    },
-    {
-        service: 'phone',
-        value: '010-9898-0101'
-    }
-]
-
 class ContactManager extends PureComponent {
+    constructor(props) {
+        super(props)
 
-  render() {
-    return (
-      <__ContactManager__Container>
-        {
-            contactData.map(contact => <ContactInfo service={contact.service} value={contact.value}/>)
+        this.state = {
+            contact: this.props.contact
         }
-        <ContactAdder />
-      </__ContactManager__Container>
-    );
-  }
+    }
+
+    removeContact = (contactServiceValue) => {
+        const newContact = []
+        console.log(contactServiceValue)
+        for(let contact of this.state.contact) {
+            if(contact.contact != contactServiceValue) {
+                newContact.push(contact)
+            }
+        }
+        this.setState({
+            contact: newContact
+        })
+    }
+
+    addContact = (contactServiceValue) => {
+        const newContact = [...this.state.contact, {contact: contactServiceValue, address: ' asdfasdf'}]
+
+        this.setState({
+            contact: newContact
+        })
+    }
+
+    onContactChange = (contactServiceValue, value) => {
+        const newContact = this.state.contact.map(contact => {
+            if(contact.contact == contactServiceValue) {
+                return {
+                    contact: contact.contact,
+                    address: value
+                }
+            }
+            return contact
+        })
+        this.setState({
+            contact: newContact
+        })
+
+        this.props.onContactChange(newContact)
+    }
+
+    render() {
+        return (
+            <__ContactManager__Container>
+                {
+                    this.state.contact.map(contact => <ContactInfo contactServiceValue={contact.contact} onContactChange={this.onContactChange} service={contact.contact} value={contact.address} />)
+                }
+                <ContactAdder addContact={this.addContact} removeContact={this.removeContact} contact={this.props.contact} />
+            </__ContactManager__Container>
+        );
+    }
 }
 
 export default ContactManager

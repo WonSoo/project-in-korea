@@ -8,7 +8,7 @@ import WeDoBoardContainer from '../../Duck/Main/WeDoBoardContainer';
 import HowMeContainer from '../../Duck/Main/HowMeContainer';
 import FooterContainer from '../../Duck/Main/FooterContainer';
 import RecruitPoster from '../../Duck/Main/RecruitPoster';
-
+import Axios from '../../util/customAxios';
 
 function createWarning(funcName) {
     return () => console.warn(funcName = ' is not defined');
@@ -32,6 +32,15 @@ class Main extends PureComponent {
         super(props);
         this.state = {
         }
+        // this.getPosterList();
+    }
+
+    
+
+    getPosterList = () => {
+        Axios.get('/recruit?limit=15').then(res => {
+            console.log(res)
+        })
     }
     render() {
         return (

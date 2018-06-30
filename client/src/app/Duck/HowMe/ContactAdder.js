@@ -32,8 +32,7 @@ const __Contact__ServiceList = styled.ul`
   box-sizing: content-box;
   border: 1px solid #CACACA;
   list-style-type: none;
-  background: #505050;
-
+  /* background: #505050; */
 `
 
 const __Contact__ServiceIcon = styled.span`
@@ -52,7 +51,28 @@ const __Contact__ServiceIcon = styled.span`
   box-sizing: border-box;
   text-align: center;
   display: inline-block;
+  background: ${props => props.isSelected ? '#505050' : 'none'};
+
 `
+
+const contactServices = [
+  {
+    value: 0,
+    icon: '㉸'
+  },
+  {
+    value: 1,
+    icon: 'ⓕ'
+  },
+  {
+    value: 2,
+    icon: '@'
+  },
+  {
+    value: 3,
+    icon: '☎'
+  }
+]
 
 class ContactAdder extends PureComponent {
   constructor(props) {
@@ -69,13 +89,31 @@ class ContactAdder extends PureComponent {
     })
   }
 
-  onServiceIconClick = (e) => {
+  onServiceIconClick = (contactServiceValue) => {
+    for(let contact of this.props.contact) {
+      if(contact.contact == contactServiceValue) {
+        this.props.removeContact(contactServiceValue)
+        this.setState({
+          isExpand: false,
+        })
+        return
+      }
+    }
+    this.props.addContact(contactServiceValue)
     this.setState({
       isExpand: false,
     })
   }
 
   render() {
+    const serviceList = contactServices.map(service => {
+      for (let contact of this.props.contact) {
+        if (contact.contact == service.value) {
+          return <__Contact__ServiceIcon isSelected={true} onClick={() => this.onServiceIconClick(service.value)}>{service.icon}</__Contact__ServiceIcon>
+        }
+      }
+      return <__Contact__ServiceIcon isSelected={false} onClick={() => this.onServiceIconClick(service.value)}>{service.icon}</__Contact__ServiceIcon>
+    })
     return (
       <__ContactAdder__Container>
         <__Add__Button onClick={this.onAddButtonClick}>+</__Add__Button>
@@ -83,10 +121,7 @@ class ContactAdder extends PureComponent {
           this.state.isExpand
             ? (
               <__Contact__ServiceList>
-                <__Contact__ServiceIcon onClick={this.onServiceIconClick}>㉸</__Contact__ServiceIcon>
-                <__Contact__ServiceIcon onClick={this.onServiceIconClick}>ⓕ</__Contact__ServiceIcon>
-                <__Contact__ServiceIcon onClick={this.onServiceIconClick}>@</__Contact__ServiceIcon>
-                <__Contact__ServiceIcon onClick={this.onServiceIconClick}>☎</__Contact__ServiceIcon>
+                {serviceList}
               </__Contact__ServiceList>
             )
             : null
