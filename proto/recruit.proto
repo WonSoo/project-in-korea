@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option java_package = "kr.pik.message";
+
+message RecruitPost {
+  message JobGroup {
+    string name = 1;
+    string do = 2;
+  }
+  message Apply {
+    string apply_id = 1;
+	string applier = 2;
+  }
+  enum Category {
+    PERFORMANCE = 0;
+    EDUCATION = 1;
+    DESIGN = 2;
+    ROBOTICS = 3;
+    COMICS = 4;
+    MACHINE_LEARNING = 5;
+    FOOD = 6;
+    ANIMATION = 7;
+    STUDY = 8;
+    MUSIC = 9;
+    JOURNALISM = 10;
+    PUBLICATION = 11;
+    FASHION = 12;
+    ENVIRONMENT = 13;
+    INFORMATION_TECHNOLOGY = 14;
+    OTHER = 15;
+  }
+  enum ColorTag {
+    ACTIVITY = 0;
+    TECHNICAL = 1;
+    ACADEMIC = 2;
+    PUBLIC_INTEREST = 3;
+    ARTISTIC = 4;
+    MODERN = 5;
+  }
+
+  string id = 15;
+  string content = 1;
+  string projectName = 2;
+  string projectPurpose = 3;
+  string projectDuring = 4;
+  Category category = 5;
+  repeated ColorTag colorTags = 6;
+  string pay = 7;
+  string startDate = 8;
+  string endDate = 9;
+  repeated JobGroup jobGroups = 10;
+  string time = 11;
+  string apply = 12;
+  string posterImagePath = 13;
+  string writer = 14;
+}
+
+message RecruitPostArray {
+  repeated RecruitPost recruitPostArray = 1;
+}
+
+message RecruitKeywords {
+  repeated string recruitKeywords = 1;
+}
+
+message RecruitList {
+  message RecruitPost {
+	string id = 1;
+    string projectName = 2;
+	string posterImagePath = 3;
+  }
+  
+  repeated RecruitPost recruitList= 1;
+}
+
+message ResponseRecruitMessage {
+  bool isSuccess = 1;
+  string message = 2;
+  string id = 3;
+}

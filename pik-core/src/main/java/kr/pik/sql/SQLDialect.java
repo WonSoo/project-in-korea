@@ -1,9 +1,13 @@
 package kr.pik.sql;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
@@ -13,94 +17,103 @@ import io.vertx.core.json.JsonObject;
 import kr.pik.utils.database.Database;
 
 public class SQLDialect {
-	private String collectionName;
 	private MongoCollection<Document> collection;
-	private MongoCollection<Document> countCollection;
-	
+
 	public SQLDialect(String collectionName) {
-		this.collectionName = collectionName;
 		collection = Database.getInstance().getCollection(collectionName);
-		countCollection = Database.getInstance().getCollection("Counters");
 	}
-	
-    public Object getNextSequence() {
-        Document searchQuery = new Document("id", collectionName);
-        Document increase = new Document("seq", Integer.valueOf(1));
-        Document updateQuery = new Document("$inc", increase);
-        Document result = (Document)countCollection.findOneAndUpdate(searchQuery, updateQuery);
-        return result.get("seq");
-    }
-    
-    public void findOneAndUpdate(Document filter, Document update) {
-    	
-    	collection.findOneAndUpdate(filter, update);
-    }
 
-    private void createCountCollection() {
-        Document insertDoc = new Document();
-        insertDoc.append("id", collectionName);
-        insertDoc.append("seq", Integer.valueOf(0));
-        countCollection.insertOne(insertDoc);
-    }
-    
-    private void updateId(Document doc) {
-        Document searchCounters = (new Document()).append("id", collectionName);
-        if (countCollection.count(searchCounters) == 0L) {
-            createCountCollection();
-        }
+	public void findOneAndUpdate(Document filter, Document update) {
+		collection.updateOne(filter, new Document("$set", update));
+	}
 
-        doc.append("id", this.getNextSequence());
-    }
-    
-    public void insert(JsonObject document) {
-    	this.insert(Document.parse(document.toString()));
-    }
-	
+	public void insert(JsonObject document) {
+		this.insert(Document.parse(document.toString()));
+	}
+
 	public void insert(Document document) {
-		updateId(document);
-		System.out.println(document);
 		collection.insertOne(document);
-		System.out.println("after inserOne");
 	}
-	
+
 	public void delete(Document searchKey) {
 		DeleteResult result = collection.deleteOne(searchKey);
 		System.out.println(result);
 	}
-	
+
 	public void update(Document searchKey, Document document) {
 		UpdateResult result = collection.updateOne(searchKey, document);
 		System.out.println(result);
 	}
+	
+	private void updateHexStringToObjectID(Document src) {
+		if (src != null && src.getString("id") != null && !src.getString("id").equals("")) {
+			src.put("_id", new ObjectId(src.getString("id")));
+			src.remove("id");
+		}
+	}
+
+	private void updateObjectIDToHexString(Document src) {
+		if (src != null) {
+			src.put("id", src.getObjectId("_id").toHexString());
+			src.remove("_id");
+		}
+	}
+
+	public Document findOne() {
+		Document result = collection.find().first();
+		updateObjectIDToHexString(result);
+		return result;
+	}
+
+	public Document findOne(Document searchKey) {
+		updateHexStringToObjectID(searchKey);
+		Document result = collection.find(searchKey).first();
+		updateObjectIDToHexString(result);
+		return result;
+	}
 
 	public Document findOne(JsonObject doc) {
-		return this.findOne(Document.parse(doc.toString()));
+		return findOne(Document.parse(doc.toString()));
 	}
-	
-	public Document findOne() {
-		return collection.find().first();
+
+	public ArrayList<Document> find() {
+		return find(null);
 	}
-	
-	public Document findOne(Document searchKey) {
-		return collection.find(searchKey).first();
+
+	public long count(Document searchKey) {
+		return collection.count(searchKey);
 	}
-	
-	public Iterator<Document> find() {
-		MongoCursor<Document> iterator = collection.find().iterator();
-		return iterator;
+
+	public ArrayList<Document> find(Document searchKey) {
+		return this.find(searchKey, -1, -1);
 	}
-	
-	public Iterator<Document> find(Document searchKey) {
-		MongoCursor<Document> iterator = collection.find(searchKey).iterator();
-		return iterator;
-	}
-	
-	public Iterator<Document> find(Document searchKey, int lastIndex, int limit) {
-		MongoCursor<Document> iterator = null;
-		if(searchKey != null)
-			iterator = collection.find(searchKey).skip(lastIndex).limit(limit).iterator();
-		else
-			iterator = collection.find().skip(lastIndex).limit(limit).iterator();
-		return iterator;
+
+	public ArrayList<Document> find(Document searchKey, int lastIndex, int limit) {
+		FindIterable<Document> findIterable = null;
+
+		if (searchKey != null) {
+			updateHexStringToObjectID(searchKey);
+			findIterable = collection.find(searchKey);
+		}
+		else {
+			findIterable = collection.find();
+		}
+
+		if (lastIndex != -1)
+			findIterable.skip(lastIndex);
+		if (limit != -1)
+			findIterable.limit(limit);
+
+		MongoCursor<Document> iterator = findIterable.iterator();
+
+		ArrayList<Document> result = new ArrayList<Document>();
+		while (iterator.hasNext()) {
+			Document doc = iterator.next();
+			updateObjectIDToHexString(doc);
+			System.out.println(doc);
+			result.add(doc);
+		}
+
+		return result;
 	}
 }

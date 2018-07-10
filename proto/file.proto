@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "kr.pik.message";
+
+message FileMessage {
+  bool isSuccess = 1;
+  string message = 2;
+  repeated string files = 3;
+}

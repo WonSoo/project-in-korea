@@ -65,7 +65,7 @@ public class CommentVerticle extends WebVerticle {
 		if(data.getString("post_type").equals("recruit")) {
 			recruitDialect.findOneAndUpdate(recruit_searchKey, Document.parse(symbolic_data.toString()));
 		}
-		context.response().end(Status.COMMENT_SUCCESS.getJsonMessage());
+		context.response().end(Status.COMMENT_SUCCESS.toBuffer());
 	}
 
 	private void deleteComment(RoutingContext context) {

@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option java_package = "kr.pik.message";
+
+enum Contact {
+  KAKAOTALK = 0;
+  FACEBOOK = 1;
+  PHONE = 2;
+  EMAIL = 3;
+}
+
+message ProfileMessage {
+  message ContactAddress {
+    Contact contact = 1;
+	string address = 2;
+  }
+  
+  string id = 7;
+  string profileImage = 1;
+  string userID = 2; // User's ObjectID
+  string userName = 3;
+  repeated ContactAddress contactAddress = 4;
+  string moodMessage = 5;
+  int32 postNum = 6;
+}
+  
+message HowMe {
+	enum Region {
+		Seoul = 0;
+  		Daejeon = 1;
+  		Daegu = 2;
+  		Ulsan = 3;
+  		Gwangju = 4;
+  		Busan = 5;
+  		Jeju = 6;
+  		Gyeonggi = 7;
+  		Gangwon = 8;
+  		Chungbuk = 9;
+  		Chungnam = 10;
+  		Gyeongbuk = 11;
+  		Gyeongnam = 12;
+		Jeonbuk = 13;
+		Jeonnam = 14;
+	}
+	
+	string id = 6;
+	string userID = 5;
+	Region region = 1;
+	bool isOccupation = 2;
+	string playTime = 3;
+	string context = 4;
+}

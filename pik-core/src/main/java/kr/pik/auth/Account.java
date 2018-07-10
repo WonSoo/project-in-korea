@@ -5,6 +5,10 @@
 
 package kr.pik.auth;
 
+import org.bson.types.ObjectId;
+
+import com.google.protobuf.ByteString;
+
 import kr.pik.content.Status;
 
 public class Account {
@@ -13,11 +17,14 @@ public class Account {
 	private AccountType accountType;
 	
     private String name;
-    private String id;
+    private String objectID;
     private String email;
     
-    public Account(Status status, AccountType accountType, String name, String email) {
+    private String id;
+    
+    public Account(Status status, String objectID, AccountType accountType, String name, String email) {
     	this.status = status;
+    	this.objectID = objectID;
     	this.accountType = accountType;
     	this.name = name;
     	this.email = email;
@@ -26,7 +33,6 @@ public class Account {
     public Account(Status status) {
     	this.status = status;
 	}
-
 
 	public AccountType getAccountType() {
 		return accountType;
@@ -42,11 +48,6 @@ public class Account {
 		this.name = name;
 	}
 
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -59,15 +60,27 @@ public class Account {
         return this.name;
     }
 
-    public String getId() {
-        return this.id;
-    }
-
     public String getEmail() {
         return this.email;
     }
 
 	public Status getStatus() {
 		return status;
+	}
+
+	public String getObjectID() {
+		return objectID;
+	}
+
+	public void setObjectID(String objectID) {
+		this.objectID = objectID;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

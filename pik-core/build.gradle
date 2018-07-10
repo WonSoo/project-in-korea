@@ -15,4 +15,12 @@ dependencies {
     // https://mvnrepository.com/artifact/io.vertx/vertx-auth-oauth2
     compile group: 'io.vertx', name: 'vertx-auth-oauth2', version: '3.4.1'
     compile group: 'io.vertx', name: 'vertx-mail-client', version: '3.5.1'
+    
+    // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
+	compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.5.1'
+	
+	// https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util
+	compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.5.1'
+	
+    
 }

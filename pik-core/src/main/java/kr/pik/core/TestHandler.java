@@ -22,7 +22,10 @@ public class TestHandler extends WebVerticle {
 	private void testDB(RoutingContext routingContext) {
 		System.out.println("testDB called");
 		SQLDialect dialect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
-		dialect.insert(new Document("TEST", "1"));
+		Document src = dialect.findOne();
+		
+		Document res = dialect.findOne(src);
+		
 		routingContext.response().end("TEST");
 	}
 

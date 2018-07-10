@@ -9,9 +9,10 @@ public class FactorySQLDialect {
 		public static final SQLDialect authDialect = new SQLDialect(Dialect.Auth.toString());
 		public static final SQLDialect applyDialect = new SQLDialect(Dialect.Apply.toString());
 		public static final SQLDialect commentDialect = new SQLDialect(Dialect.Comment.toString());
+		public static final SQLDialect profileDialect = new SQLDialect(Dialect.Profile.toString());
 	}
 	public enum Dialect {
-		Recruit, AboutMe, Auth, Apply, Comment
+		Recruit, AboutMe, Auth, Apply, Comment, Profile, HowMe
 	}
 	
 	//We can use it by access directly to variables;
@@ -27,6 +28,8 @@ public class FactorySQLDialect {
 			return FactorySQLDialectWrapper.applyDialect;
 		case Comment:
 			return FactorySQLDialectWrapper.commentDialect;
+		case Profile:
+			return FactorySQLDialectWrapper.profileDialect;
 		default:
 			return null;
 		}

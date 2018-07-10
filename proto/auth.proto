@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option java_package = "kr.pik.message";
+
+message LoginMessage {
+  message EmailLoginMessage {
+    string email = 1;
+    string password = 2;
+  }
+
+  message FacebookLoginMessage {
+    string token = 1;
+  }
+
+  oneof loginMethod {
+    EmailLoginMessage emailLogin = 1;
+    FacebookLoginMessage facebookLogin = 2;
+  }
+}
+
+message RegisterVerifyMessage {
+  string email = 1;
+}
+
+message RegisterVerifyCheckMessage {
+  string verifyNumber = 1;
+}
+
+message RegisterMessage {
+  message EmailRegisterMessage {
+    string email = 1;
+    string password = 2;
+    string name = 3;
+  }
+
+  message FacebookRegisterMessage {
+    string token = 1;
+  }
+
+  oneof registerMethod {
+    EmailRegisterMessage emailRegister = 1;
+    FacebookRegisterMessage facebookRegister = 2;
+  } 
+}

@@ -5,19 +5,36 @@
 
 package kr.pik.core;
 
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.dns.impl.decoder.RecordDecoder;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import kr.pik.auth.Account;
 import kr.pik.content.Status;
+import kr.pik.message.Auth.LoginMessage;
+import kr.pik.message.Recruit.RecruitList;
+import kr.pik.message.Recruit.RecruitPost;
+import kr.pik.message.Recruit.RecruitPostArray;
+import kr.pik.message.Recruit.ResponseRecruitMessage;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
 import kr.pik.sql.SQLDialect;
 import org.bson.Document;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message.Builder;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.util.JsonFormat.Printer;
+import com.google.protobuf.util.JsonFormat.TypeRegistry;
 
 public class RecruitVerticle extends WebVerticle {
 	private SQLDialect recruitDialect;
@@ -31,7 +48,6 @@ public class RecruitVerticle extends WebVerticle {
     	applyDialect = FactorySQLDialect.createSQLDialect(Dialect.Apply);
     	authDIalect = FactorySQLDialect.createSQLDialect(Dialect.Auth);
     	
-        router.get("/api/recruit/getCategoies").handler(this::getCategories);
         router.get("/api/recruit/getKeyword").handler(this::getKeyword);
         router.get("/api/recruit").handler(this::getAmount);
         router.post("/api/recruit").handler(this::addRecruit);
@@ -52,34 +68,34 @@ public class RecruitVerticle extends WebVerticle {
 		
 		Document a = applyDialect.findOne(new Document("active", new Document("$exists", true)));
 		if(a!= null) {
-			context.response().end(Status.RECRUIT_APPLY_PROCESS_FAIL.getJsonMessage());
+			context.response().end(Status.RECRUIT_APPLY_PROCESS_FAIL.toBuffer());
 			return;
 		}
 
 		Document update = new Document("active", data.getBoolean("active"));
 		applyDialect.findOneAndUpdate(doc, new Document("$set", update));
 		
-		context.response().end(Status.RECRUIT_APPLY_PROCESS_SUCCESS.getJsonMessage());
+		context.response().end(Status.RECRUIT_APPLY_PROCESS_SUCCESS.toBuffer());
 	}
 	
 	private void apply(RoutingContext context) {
 		JsonObject data = context.getBodyAsJson();
 		
 		JsonObject new_data = new JsonObject();
-		String writer = getAccount(context).getEmail();
+		String applier = getAccount(context).getEmail();
 
 		Document doc = new Document();
 		doc.put("id", data.getString("recruit_id"));
-		doc.put("apply", new Document().put("writer", writer));
+		doc.put("apply", new Document().put("applier", applier));
 		
 		Document isExist = recruitDialect.findOne(doc);
 		if(isExist != null) {
-			context.response().end(Status.RECRUIT_ALREADY_APPLIED.getJsonMessage());
+			context.response().end(Status.RECRUIT_ALREADY_APPLIED.toBuffer());
 			return;
 		}
 		
 		new_data.put("recruit_id", data.getString("recruit_id"));
-		new_data.put("writer", writer);
+		new_data.put("applier", applier);
 		new_data.put("time", String.valueOf(new Date()));
 		new_data.put("active", true);
 		
@@ -88,20 +104,20 @@ public class RecruitVerticle extends WebVerticle {
 		JsonObject symbolic_data = new JsonObject();
 		Document inserted_data= applyDialect.findOne(Document.parse(new_data.toString()));
 		JsonObject inner_data = new JsonObject();
-		inner_data.put("apply_id", inserted_data.get("_id"));
-		inner_data.put("writer", writer);
+		inner_data.put("apply_id", inserted_data.get("id"));
+		inner_data.put("applier", applier);
 		
 		symbolic_data.put("apply", inner_data);
 		
 		Document recruit_searchKey = new Document("id", data.getString("recruit_id"));
 		recruitDialect.update(recruit_searchKey, Document.parse(symbolic_data.toString()));
 		
-		Document auth_searchKey = new Document("email", writer);
+		Document auth_searchKey = new Document("email", applier);
 		
 		Document updateDocument = new Document("$set", Document.parse(symbolic_data.toString()));
 		authDIalect.findOneAndUpdate(auth_searchKey, Document.parse(updateDocument.toString()));
 		
-		context.response().end(Status.RECRUIT_APPLY_SUCCESS.getJsonMessage());
+		context.response().end(Status.RECRUIT_APPLY_SUCCESS.toBuffer());
 	}
     
     private void test(RoutingContext routingContext) {
@@ -109,17 +125,6 @@ public class RecruitVerticle extends WebVerticle {
     	routingContext.response().end("test() called!");
     }
     
-    private void getCategories(RoutingContext routingContext) {
-    	Iterator<Document> cursor = recruitDialect.find();
-    	
-    	String categories = null;
-        while(cursor.hasNext())
-        	categories = cursor.next().toJson();
-        
-        routingContext.response().setStatusCode(200);
-        routingContext.response().end(categories);
-    }
-
     private void getKeyword(RoutingContext routingContext) {
         String projectName = routingContext.request().getParam("project_name");
         String bigCategory = routingContext.request().getParam("big_category");
@@ -130,85 +135,150 @@ public class RecruitVerticle extends WebVerticle {
         searchQuery.put("big_category", bigCategory);
         searchQuery.put("colortags", colorTags);
         
-        Iterator<Document> cursor = recruitDialect.find(searchQuery);
-        JsonArray categories= new JsonArray();
-        while(cursor.hasNext())
-        	categories.add(cursor.next().toJson());
-
-        routingContext.response().end(categories.toString());
+        ArrayList<Document> docs = recruitDialect.find(searchQuery);
+        
+        RecruitList.Builder builder = RecruitList.newBuilder();
+        for(Document doc : docs)
+        {
+        	builder.addRecruitList(RecruitList.RecruitPost.newBuilder().setProjectName(doc.getString("project_name")).setId(doc.getString("id")).setPosterImagePath("posterImagePath"));
+        }
+        RecruitList recruitLists = builder.build();
+        
+        routingContext.response().end(Buffer.buffer(recruitLists.toByteArray()));
     }
 
     private void getAmount(RoutingContext routingContext) {
-        int limit = Integer.parseInt(routingContext.request().getParam("limit"));
-        Iterator<Document> cursor = recruitDialect.find(null, limit, 15);
+    	String _lastIndex = routingContext.request().getParam("lastIndex");
+    	int lastIndex = 0;
+    	
+    	if(_lastIndex != null)
+    		lastIndex = Integer.parseInt(_lastIndex);
+    	
+    	String _limit = routingContext.request().getParam("limit");
+    	int limit = 0;
+    	if(_limit != null)
+    		limit = Integer.parseInt(_limit);
+    	
+        ArrayList<Document> docs = recruitDialect.find(null, lastIndex, limit);
         
-        JsonArray jsonArray = new JsonArray();
-        while(cursor.hasNext()) {
-        	jsonArray.add(cursor.next().toJson());
+        RecruitList.Builder builder = RecruitList.newBuilder(); 
+        for( Document doc : docs ) {
+        	RecruitList.RecruitPost.Builder postBuilder = RecruitList.RecruitPost.newBuilder();
+    		postBuilder.setId(doc.getString("id"));
+    		postBuilder.setPosterImagePath(doc.getString("posterImagePath"));
+    		postBuilder.setProjectName(doc.getString("projectName"));
+        	
+        	builder.addRecruitList(postBuilder.build());
         }
+        
+        RecruitList recruitList = builder.build();
 
         routingContext.response().setChunked(true);
-        routingContext.response().end(jsonArray.toString());
+        routingContext.response().end(Buffer.buffer(recruitList.toByteArray()));
     }
     
     private void addRecruit(RoutingContext routingContext) {
-    	System.out.println("aa");
-        JsonObject json = routingContext.getBodyAsJson();
-		System.out.println("bb");
+		System.out.println("addRecruit called");
+    	byte[] bytes = routingContext.getBody().getBytes();
+		RecruitPost.Builder builder = null;
+		try {
+			builder = RecruitPost.newBuilder().mergeFrom(bytes);
+		} catch (InvalidProtocolBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		Document insertData = null;
+		try {
+			insertData = Document.parse(JsonFormat.printer().includingDefaultValueFields().print(builder));
+			
+			Account account = getAccount(routingContext);
+			if(account == null) {
+				ResponseRecruitMessage message = ResponseRecruitMessage.newBuilder().setIsSuccess(false).setMessage("글 작성에 실패하셨습니다. 로그인이 필요합니다.").build();
+		        routingContext.response().setStatusCode(200);
+		        routingContext.response().end(Buffer.buffer(message.toByteArray()));
+				return;
+			}
 
-		System.out.println("cc");
-//        json.put("writer", getAccount(routingContext).getEmail());
-
-		System.out.println("dd");
-        json.put("time", String.valueOf(new Date()));
-
-        System.out.println(Document.parse(json.toString()));
-        recruitDialect.insert(Document.parse(json.toString()));
+			insertData.replace("writer", account.getEmail());
+			insertData.replace("time", String.valueOf(new Date()));
+		} catch (InvalidProtocolBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        recruitDialect.insert(insertData);
+        
+        Document rs = recruitDialect.findOne(insertData);
+        
+        ResponseRecruitMessage message = ResponseRecruitMessage.newBuilder().setIsSuccess(true).setMessage("글 작성에 성공하셨습니다.").setId(rs.getString("id")).build();
         routingContext.response().setStatusCode(200);
-        routingContext.response().setStatusMessage("post writed");
-        routingContext.response().end();
+        routingContext.response().end(Buffer.buffer(message.toByteArray()));
     }
 
     private void getRecruit(RoutingContext routingContext) {
-    	System.out.println("getRecruit called!");
         Document searchQuery = new Document();
         String id = routingContext.pathParam("id");
         if(id == null) {
-        	routingContext.response().end("id is null");
+        	routingContext.response().end(Status.RECRUIT_GET_ID_NULL.toBuffer());
         	return;
         }
-        searchQuery.put("_id", Integer.parseInt(id));
-
+        searchQuery.put("id", id);
         Document doc = recruitDialect.findOne(searchQuery);
-        String response_json = null;
-    	Account account = getAccount(routingContext);
-    	if(!doc.getString("writer").equals(account.getEmail())) {
-    		doc.remove("apply");
-    	}
-    	response_json = doc.toJson();
         
+    	Account account = getAccount(routingContext);
+    	System.out.println(doc);
+//    	if(!doc.getString("applier").equals(account.getEmail())) {
+//    		doc.replace("apply", "");
+//    	}
+
+		RecruitPost post = null;
+    	try {
+        	RecruitPost.Builder builder = RecruitPost.newBuilder();
+			JsonFormat.parser().merge(doc.toJson(), builder);
+			post = builder.build();
+		} catch (InvalidProtocolBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
         routingContext.response().setChunked(true);
         
-        if(response_json != null) 
-            routingContext.response().end(response_json);
+        if(post != null) 
+            routingContext.response().end(Buffer.buffer(post.toByteArray()));
         else
         	routingContext.response().end();
     }
     
     private void updateRecruit(RoutingContext routingContext) {
-        Document searchKey = new Document();
-        searchKey.put("_id", Integer.parseInt(routingContext.pathParam("id")));
-        recruitDialect.update(searchKey, Document.parse(routingContext.getBodyAsJson().toString()));
+    	Document searchKey = new Document();
+        searchKey.put("id", Integer.parseInt(routingContext.pathParam("id")));
         
-        routingContext.response().setChunked(true);
-        routingContext.response().end();
+        byte[] bytes = routingContext.getBody().getBytes();
+		RecruitPost requestMessage = null;
+		try {
+			requestMessage = RecruitPost.newBuilder().mergeFrom(bytes).build();
+		} catch (InvalidProtocolBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Document updateData = messageToDoc(requestMessage);
+
+		recruitDialect.update(searchKey, updateData);
+        Document rs = recruitDialect.findOne(updateData);
+        
+        ResponseRecruitMessage message = ResponseRecruitMessage.newBuilder().setIsSuccess(true).setMessage("글 수정에 성공하셨습니다.").setId(rs.getString("id")).build();
+        routingContext.response().setStatusCode(200);
+        routingContext.response().end(Buffer.buffer(message.toByteArray()));
     }
     
     private void deleteRecruit(RoutingContext routingContext) {
-    	Document searchKey = new Document("_id", Integer.parseInt(routingContext.pathParam("id")));
+    	Document searchKey = new Document("id", Integer.parseInt(routingContext.pathParam("id")));
     	recruitDialect.delete(searchKey);
-    	
-    	routingContext.response().end();
+
+    	ResponseRecruitMessage message = ResponseRecruitMessage.newBuilder().setIsSuccess(true).setMessage("글 삭제에 성공하셨습니다.").build();
+        routingContext.response().setStatusCode(200);
+        routingContext.response().end(Buffer.buffer(message.toByteArray()));
     }
 }

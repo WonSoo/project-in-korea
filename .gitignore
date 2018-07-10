@@ -4,6 +4,7 @@ build/
 /.vertx/
 /.idea/
 /logs/
+client
 /out/
 /output/
 *.class

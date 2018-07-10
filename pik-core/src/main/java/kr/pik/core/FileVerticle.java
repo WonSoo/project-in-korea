@@ -5,8 +5,11 @@
 
 package kr.pik.core;
 
+import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.*;
 import kr.pik.content.Status;
+import kr.pik.message.File.FileMessage;
+
 import java.util.Iterator;
 import org.bson.Document;
 
@@ -25,15 +28,16 @@ public class FileVerticle extends WebVerticle {
 
 	private void uploadFile(RoutingContext routingContext) {
 		Iterator<FileUpload> fileIterator = routingContext.fileUploads().iterator();
-		Document responseMessage = new Document();
-		Document files = new Document();
+		
+		FileMessage.Builder builder = FileMessage.newBuilder();
 		while (fileIterator.hasNext()) {
 			FileUpload fileUpload = (FileUpload) fileIterator.next();
-			files.put(Integer.toString(files.size()), fileUpload.uploadedFileName().replace("file-uploads\\", ""));
+			builder.addFiles(fileUpload.uploadedFileName().replace("file-uploads\\", ""));
 		}
-		responseMessage.put("files", files);
 		
-		responseMessage = Status.FILE_SAVE_SUCCESS.addErrorMessage(responseMessage);
-		routingContext.response().end(responseMessage.toString());
+		builder.setIsSuccess(Status.FILE_SAVE_SUCCESS.isSuccess());
+		builder.setMessage(Status.FILE_SAVE_SUCCESS.getMessage());
+		
+		routingContext.response().end(Buffer.buffer(builder.build().toByteArray()));
 	}
 }

@@ -1,6 +1,10 @@
 package kr.pik.auth;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import com.google.protobuf.ByteString;
+
 import kr.pik.content.Status;
 import kr.pik.sql.FactorySQLDialect;
 import kr.pik.sql.FactorySQLDialect.Dialect;
@@ -12,17 +16,15 @@ public class PIKAuth implements AuthManager {
 	String name;
 	String email;
 	String password;
-	String repassword;
 	
 	public PIKAuth(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}
 
-	public PIKAuth(String email, String password, String repassword, String name) {
+	public PIKAuth(String email, String password, String name) {
 		this.email = email;
 		this.password = password;
-		this.repassword = repassword;
 		this.name = name;
 	}
 
@@ -34,13 +36,17 @@ public class PIKAuth implements AuthManager {
 
 		return result;
 	}
+	
+	public ByteString toByteString(ObjectId id) {
+		return ByteString.copyFrom(id.toByteArray());
+	}
 
 	public Account login() {
 		Document result = findUserByEmail();
 		
 		Account account = null;
 		if (result != null && result.get("password").equals(password)) {
-			account = new Account(Status.LOGIN_SUCCESS, AccountType.PIK, result.getString("name"), result.getString("email"));
+			account = new Account(Status.LOGIN_SUCCESS, result.getString("id"), AccountType.PIK, result.getString("name"), result.getString("email"));
 			return account;
 		} else {
 			account = new Account(Status.LOGIN_FAIL_INVALID_PASSWORD);
@@ -54,9 +60,6 @@ public class PIKAuth implements AuthManager {
 			return Status.REGISTER_FAIL_EXIST_USER;
 		}
 		
-		if(!password.equals(repassword)) {
-			return Status.REGISTER_FAIL_INVALID_REPASSWORD;
-		}
 		Document inputQuery = new Document();
 		inputQuery.put("accountType", "pik");
 		inputQuery.put("name", name);
@@ -72,7 +75,7 @@ public class PIKAuth implements AuthManager {
 			return true;
 
 		return false;
-	}
+	}	
 
 	public String getName() {
 		return name;
@@ -86,9 +89,5 @@ public class PIKAuth implements AuthManager {
 		return password;
 	}
 
-	public String getRepassword() {
-		return repassword;
-	}
-	
 	
 }

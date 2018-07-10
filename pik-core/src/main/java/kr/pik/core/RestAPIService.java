@@ -32,15 +32,18 @@ public class RestAPIService {
 		addCookieHandler();
 		addSessionHandler();
 
-		// WebVerticle testHandler = new TestHandler();
-		// vertx.deployVerticle(testHandler);
-
 		try {
+			 WebVerticle testHandler = new TestHandler();
+			 vertx.deployVerticle(testHandler);
+			
 			WebVerticle proxyVerticle = new ProxyVerticle();
-//			proxyVerticle.start();
+			proxyVerticle.start();
 
 			WebVerticle recruitVerticle = new RecruitVerticle();
 			recruitVerticle.start();
+			
+			WebVerticle profileVerticle = new ProfileVerticle();
+			profileVerticle.start();
 
 			WebVerticle authVerticle = new AuthVerticle();
 			authVerticle.start();
@@ -64,7 +67,7 @@ public class RestAPIService {
 		router.route()
 				.handler(CorsHandler.create("*").allowedMethod(io.vertx.core.http.HttpMethod.GET)
 						.allowedMethod(io.vertx.core.http.HttpMethod.POST)
-						.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS).allowCredentials(true)
+						.allowedMethod(io.vertx.core.http.HttpMethod.OPTIONS).allowedMethod(io.vertx.core.http.HttpMethod.PUT).allowCredentials(true)
 						.allowedHeader("Access-Control-Allow-Method").allowedHeader("Access-Control-Allow-Origin")
 						.allowedHeader("Access-Control-Allow-Credentials").allowedHeader("Content-Type"));
 	}
