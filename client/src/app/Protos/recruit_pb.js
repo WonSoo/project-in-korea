@@ -77,7 +77,7 @@ proto.RecruitPost.prototype.toObject = function(opt_includeInstance) {
  */
 proto.RecruitPost.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 15, 0),
+    id: jspb.Message.getFieldWithDefault(msg, 15, ""),
     content: jspb.Message.getFieldWithDefault(msg, 1, ""),
     projectname: jspb.Message.getFieldWithDefault(msg, 2, ""),
     projectpurpose: jspb.Message.getFieldWithDefault(msg, 3, ""),
@@ -130,7 +130,7 @@ proto.RecruitPost.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 15:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {string} */ (reader.readString());
       msg.setId(value);
       break;
     case 1:
@@ -220,8 +220,8 @@ proto.RecruitPost.prototype.serializeBinary = function() {
 proto.RecruitPost.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f.length > 0) {
+    writer.writeString(
       15,
       f
     );
@@ -578,7 +578,7 @@ proto.RecruitPost.Apply.prototype.toObject = function(opt_includeInstance) {
  */
 proto.RecruitPost.Apply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    applyId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    applyId: jspb.Message.getFieldWithDefault(msg, 1, ""),
     applier: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
@@ -617,7 +617,7 @@ proto.RecruitPost.Apply.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {string} */ (reader.readString());
       msg.setApplyId(value);
       break;
     case 2:
@@ -654,8 +654,8 @@ proto.RecruitPost.Apply.prototype.serializeBinary = function() {
 proto.RecruitPost.Apply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getApplyId();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
@@ -671,17 +671,17 @@ proto.RecruitPost.Apply.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional int32 apply_id = 1;
- * @return {number}
+ * optional string apply_id = 1;
+ * @return {string}
  */
 proto.RecruitPost.Apply.prototype.getApplyId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.RecruitPost.Apply.prototype.setApplyId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -701,17 +701,17 @@ proto.RecruitPost.Apply.prototype.setApplier = function(value) {
 
 
 /**
- * optional int32 id = 15;
- * @return {number}
+ * optional string id = 15;
+ * @return {string}
  */
 proto.RecruitPost.prototype.getId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 15, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 15, ""));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.RecruitPost.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 15, value);
+  jspb.Message.setProto3StringField(this, 15, value);
 };
 
 
@@ -1470,7 +1470,7 @@ proto.RecruitList.RecruitPost.prototype.toObject = function(opt_includeInstance)
  */
 proto.RecruitList.RecruitPost.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     projectname: jspb.Message.getFieldWithDefault(msg, 2, ""),
     posterimagepath: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
@@ -1510,7 +1510,7 @@ proto.RecruitList.RecruitPost.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {string} */ (reader.readString());
       msg.setId(value);
       break;
     case 2:
@@ -1551,8 +1551,8 @@ proto.RecruitList.RecruitPost.prototype.serializeBinary = function() {
 proto.RecruitList.RecruitPost.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
@@ -1575,17 +1575,17 @@ proto.RecruitList.RecruitPost.serializeBinaryToWriter = function(message, writer
 
 
 /**
- * optional int32 id = 1;
- * @return {number}
+ * optional string id = 1;
+ * @return {string}
  */
 proto.RecruitList.RecruitPost.prototype.getId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.RecruitList.RecruitPost.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -1699,7 +1699,7 @@ proto.ResponseRecruitMessage.toObject = function(includeInstance, msg) {
   var f, obj = {
     issuccess: jspb.Message.getFieldWithDefault(msg, 1, false),
     message: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    id: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -1745,7 +1745,7 @@ proto.ResponseRecruitMessage.deserializeBinaryFromReader = function(msg, reader)
       msg.setMessage(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {string} */ (reader.readString());
       msg.setId(value);
       break;
     default:
@@ -1792,8 +1792,8 @@ proto.ResponseRecruitMessage.serializeBinaryToWriter = function(message, writer)
     );
   }
   f = message.getId();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f.length > 0) {
+    writer.writeString(
       3,
       f
     );
@@ -1834,17 +1834,17 @@ proto.ResponseRecruitMessage.prototype.setMessage = function(value) {
 
 
 /**
- * optional int32 id = 3;
- * @return {number}
+ * optional string id = 3;
+ * @return {string}
  */
 proto.ResponseRecruitMessage.prototype.getId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
-/** @param {number} value */
+/** @param {string} value */
 proto.ResponseRecruitMessage.prototype.setId = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setProto3StringField(this, 3, value);
 };
 
 

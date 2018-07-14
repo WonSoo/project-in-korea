@@ -164,7 +164,7 @@ class RecuritWriteForm extends Component {
       const StatusMessage = RecruitProto.ResponseRecruitMessage.deserializeBinary(res.data)
       console.log(StatusMessage.getMessage())
       if (StatusMessage.getIssuccess()) {
-        document.location.href = '/recruit/' + StatusMessage.getId()
+        document.location.href = '/Recurit/' + StatusMessage.getId()
       }
     } catch (err) {
       console.log(err)
