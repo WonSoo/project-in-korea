@@ -5,7 +5,9 @@ import java.util.Map;
 import org.bson.Document;
 
 import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.util.JsonFormat;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
@@ -34,11 +36,12 @@ public abstract class WebVerticle extends AbstractVerticle {
     
     public Document messageToDoc(GeneratedMessageV3 message) {
     	Document doc = new Document();
-    	
-        Map<FieldDescriptor, Object> fields = message.getAllFields();
-        fields.forEach((k, v)->{
-        	doc.put(k.getName(), v);
-        });
+    	try {
+			doc = Document.parse(JsonFormat.printer().includingDefaultValueFields().print(message));
+		} catch (InvalidProtocolBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
     	return doc;
     }

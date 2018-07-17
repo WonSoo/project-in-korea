@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/main/resources/build</name>
-			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/client/build</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

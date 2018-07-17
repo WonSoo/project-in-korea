@@ -54,9 +54,10 @@ public class ProfileVerticle extends WebVerticle {
 	private void getProfile(RoutingContext context) {
        Document searchQuery = new Document();
         String id = context.pathParam("id");
+        Account account = null;
         if(id == null) {
-        	Account account = getAccount(context);
-        	if(account == null) {
+        	account = getAccount(context);
+        	if(account != null) {
         		id = account.getObjectID();
         	} else {
         		context.response().end(Status.PERMISSION_DENIED_AUTH_NEED.toBuffer());
@@ -66,11 +67,18 @@ public class ProfileVerticle extends WebVerticle {
         searchQuery.put("userID", id);
         Document doc = profileDialect.findOne(searchQuery);
         
-    	System.out.println(doc);
-
-		ProfileMessage post = null;
+        ProfileMessage post = null;
+        ProfileMessage.Builder builder = ProfileMessage.newBuilder();
+        if(doc == null) {
+        	post = builder.setUserID(account.getObjectID()).setUserName(account.getName()).build();
+        	Document inputData = messageToDoc(post);
+        	profileDialect.insert(inputData);
+        	
+        	doc = profileDialect.findOne(searchQuery);
+        }
+        
     	try {
-    		ProfileMessage.Builder builder = ProfileMessage.newBuilder();
+    		builder.clear();
 			JsonFormat.parser().merge(doc.toJson(), builder);
 			post = builder.build();
 		} catch (InvalidProtocolBufferException e) {
@@ -78,11 +86,9 @@ public class ProfileVerticle extends WebVerticle {
 			e.printStackTrace();
 		}
     	
+        System.out.println(post);
         context.response().setChunked(true);
-        if(post != null) 
-            context.response().end(Buffer.buffer(post.toByteArray()));
-        else
-        	context.response().end();
+        context.response().end(Buffer.buffer(post.toByteArray()));
 	}
 	
 	private void updateProfile(RoutingContext context) {
@@ -98,6 +104,8 @@ public class ProfileVerticle extends WebVerticle {
 		Document searchKey = new Document("userID", profileMessage.getUserID());
 		Document updateData = messageToDoc(profileMessage);
 		
+		System.out.println(searchKey);
+		System.out.println(updateData);
 		profileDialect.update(searchKey, updateData);
         Document rs = profileDialect.findOne(updateData);
         
