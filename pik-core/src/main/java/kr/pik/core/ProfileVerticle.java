@@ -95,7 +95,14 @@ public class ProfileVerticle extends WebVerticle {
         byte[] bytes = context.getBody().getBytes();
 		ProfileMessage profileMessage = null;
 		try {
-			profileMessage = ProfileMessage.newBuilder().mergeFrom(bytes).build();
+	        Account account = null;
+        	account = getAccount(context);
+        	if(account == null) {
+        		context.response().end(Status.PERMISSION_DENIED_AUTH_NEED.toBuffer());
+        		return;
+        	}
+			
+			profileMessage = ProfileMessage.newBuilder().setUserID(account.getObjectID()).mergeFrom(bytes).build();
 		} catch (InvalidProtocolBufferException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -41,8 +41,7 @@ public class SQLDialect {
 	}
 
 	public void update(Document searchKey, Document document) {
-		UpdateResult result = collection.updateOne(searchKey, document);
-		System.out.println(result);
+		findOneAndUpdate(searchKey, document);
 	}
 	
 	private void updateHexStringToObjectID(Document src) {
