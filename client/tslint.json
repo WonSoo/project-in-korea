@@ -5,18 +5,9 @@
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"
-    ],
-    "rules": {
-      "no-console": false
-    }
+    ]
   },
   "rules": {
-    "no-console": false,
     "ordered-imports": false
-  },
-  "compilerOptions": {
-    "typeRoots": [
-      "node_modules/@types"
-    ]
   }
 }
